@@ -6,13 +6,14 @@ LDPATH = -Wl,-R/usr/pkg/lib
 RM = rm
 HEADERS = -Iinclude
 
-SFRAMEWORK = src/framework/PerformanceTimer.cpp src/framework/Keyboard.cpp src/framework/GlutFramework.cpp
+SFRAMEWORK = src/framework/PerformanceTimer.cpp src/framework/Keyboard.cpp src/framework/GlutFramework.cpp src/framework/GLerror.cpp
+
 
 
 SMATH = src/math/Arcball.cpp 
 SWINDOW = src/window/Viewport.cpp
 SRENDER = src/render/Render.cpp
-SSTREETS = src/streets/Streets.cpp
+SSTREETS = src/streets/Streets.cpp src/streets/Block.cpp src/streets/Building.cpp
 SMATH = src/math/Random.cpp
 
 

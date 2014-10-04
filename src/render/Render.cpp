@@ -19,26 +19,59 @@ Render::Render() {
 	winWidth = 0;
 	winHeight = 0;
 
-	streets = new Streets(1000, 1000);
+	timebase = 0;
+	time = 0;
+	frame = 0;
+
+	streets = NULL;
+
+	fpsInfo = "FPS: 0";
 
 }
 
 Render::~Render() {
+	delete (streets);
 }
 
 void Render::display(float dTime)
 {
+	char info[50];
+	std::ostringstream oss;
+	float textColor[3] = {1.0f, 1.0f, 1.0f};
+	if (streets == NULL)
+	{
+		streets = new Streets(1000, 1000);
+		streets->createMap();
+	}
+
+	frame++;
+	time=glutGet(GLUT_ELAPSED_TIME);
+	if (time - timebase > 1000) {
+		oss << "FPS: " << frame*1000.0/(time-timebase);
+		fpsInfo = oss.str();
+		timebase = time;
+		frame = 0;
+	}
+
 //	glutSolidTeapot(1);
 	glEnable(GL_NORMALIZE);
-	setCamera();
 	glPushMatrix();
-	glScalef(0.05, 0.05, 0.05);
-	glScalef(zoom, zoom, zoom);
-	setupLights();
-	glColor3f(0.5,0.5,0.5);
-	streets->render();
-	Viewport::drawAxes(1);
+		glMatrixMode( GL_PROJECTION );
+		glLoadIdentity();
+		gluOrtho2D(0, winWidth, 0, winHeight);
+		Viewport::RenderString(5.0f, 5.0f, GLUT_BITMAP_TIMES_ROMAN_24, fpsInfo.c_str(), textColor);
+		glMatrixMode( GL_MODELVIEW );
 	glPopMatrix();
+	glPushMatrix();
+		setCamera();
+		glScalef(0.05, 0.05, 0.05);
+		glScalef(zoom, zoom, zoom);
+		setupLights();
+		glColor3f(0.5,0.5,0.5);
+		streets->render();
+		Viewport::drawAxes(1);
+	glPopMatrix();
+
 
 
 }

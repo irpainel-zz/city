@@ -92,6 +92,8 @@ private:
 	int keyDown;
 
 	int winWidth, winHeight;
+	int frame,time,timebase;
+	string fpsInfo;
 
 	Streets * streets;
 

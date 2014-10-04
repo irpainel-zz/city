@@ -265,7 +265,9 @@ namespace glutFramework {
 		elapsedTimeInSeconds = displayTimer.getElapsedSeconds(); // seconds
 		
 		//setupLights();
-		setDisplayMatricies();
+
+		//inside of setcamera
+		//setDisplayMatricies();
 		
 		display(elapsedTimeInSeconds);
 		

@@ -13,16 +13,11 @@
 #include <sstream>
 #include "GlutFramework.h"
 #include "Random.h"
+#include "Block.h"
 #include "glm/glm.hpp"
+#include "GLerror.h"
 
 using namespace std;
-
-
-typedef struct b {
-	glm::vec3 start;
-	glm::vec3 end;
-	int intersections;
-}block;
 
 class Streets {
 public:
@@ -33,8 +28,11 @@ public:
 
 private:
 	int cityWidth, cityLength;
-	vector <block> blocks;
+	vector <Block*> blocks;
 	int numBlock;
+	int numBuildings;
+
+	GLuint streetSegmentDL;
 
 	std::map<std::string, int> blockIndex;
 
@@ -47,8 +45,8 @@ private:
 	void createBlocks();
 	void drawStreets();
 	void drawStreetLine(glm::vec3 size);
-	void drawStreetSegment();
 	void drawCityFloor();
+	void createStreetSegmentGeometry();
 
 	std::string concat(glm::vec3);
 	void insertIndex(glm::vec3, int);

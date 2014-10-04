@@ -30,7 +30,7 @@ void Viewport::drawAxes(int toggleAxes)
     double len = 10000.0;
     glColor3f(1.0,0.0,0.0);
     glBegin(GL_LINES);
-    glVertex3d(-len,0,0);
+    glVertex3d(0,0,0);
     glVertex3d(len,0,0);
     glEnd();
     glColor3f(0.0,1.0,0.0);

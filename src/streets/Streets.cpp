@@ -18,24 +18,28 @@ Streets::Streets(int w, int l) {
 	segWidth= 3.0;
 	segLength = 5.0;
 	numSegments = 0;
+	streetSegmentDL = 0;
 
-	createMap();
 	std::map<std::string, int> block;
 	blockIndex = block;
+
+	numBlock = 0;
+	numBuildings = 0;
+
 }
 
 Streets::~Streets() {
-	// TODO Auto-generated destructor stub
+	glDeleteLists(streetSegmentDL, 1);
 }
 
 void Streets::render()
 {
 	numSegments = 0;
 	glPushMatrix();
-	drawCityFloor();
+//	drawCityFloor();
 	drawStreets();
 	glPopMatrix();
-	//cout << "Segments: " << numSegments << endl;
+//	cout << "Segments: " << numSegments << endl;
 
 }
 
@@ -44,16 +48,22 @@ void Streets::drawStreets()
 	unsigned int i;
 	glm::vec3 blockSize;
 	//draw blocks
-	glColor3f(0.9, 0.9, 0.9);
+	numSegments = 0;
 	for(i = 0; i<blocks.size(); i++)
 	{
-			blockSize = blocks[i].end - blocks[i].start;
-			glPushMatrix();
-			glTranslatef(0.0, 0.0, blocks[i].start.x);
-			glTranslatef(blocks[i].start.z, 0.0, 0.0);
+
+		blockSize = blocks[i]->getEnd() - blocks[i]->getStart();
+		glPushMatrix();
+			glTranslatef(0.0, 0.0, blocks[i]->getStart().z);
+			glTranslatef(blocks[i]->getStart().x, 0.0, 0.0);
 			drawStreetLine(blockSize);
-			glPopMatrix();
+		glPopMatrix();
+		glPushMatrix();
+			glTranslatef(blocks[i]->getStart().x, 0.f, blocks[i]->getStart().z);
+			blocks[i]->renderBlock();
+		glPopMatrix();
 	}
+//	cout << "Segments: " << numSegments << endl;
 }
 
 void Streets::drawStreetLine(glm::vec3 size)
@@ -63,41 +73,50 @@ void Streets::drawStreetLine(glm::vec3 size)
 
 	position = segLength;
 	finalPosition = size.x - segLength;
+	check_gl_error();
+
+
 	while (position <= finalPosition)
 	{
 		glPushMatrix();
+		glRotatef(90, 0.f, 1.0, 0.f);
+		glPushMatrix();
 		glTranslatef(0.0, 0.0, position);
-		drawStreetSegment();
+		glCallList(streetSegmentDL);
+		numSegments++;
 		position += segLength;
+		glPopMatrix();
 		glPopMatrix();
 	}
 
+	//draw streets in Z axis
 	position = segLength;
 	finalPosition = size.z - segLength;
 	while (position <= finalPosition)
 	{
 		glPushMatrix();
-		glRotatef(90, 0.0, 1.0, 0.0);
-		glPushMatrix();
 		glTranslatef(0.0, 0.0, position);
-		drawStreetSegment();
+		glCallList(streetSegmentDL);
+		numSegments++;
 		position += segLength;
-		glPopMatrix();
 		glPopMatrix();
 	}
 
+
 }
 
-void Streets::drawStreetSegment()
+void Streets::createStreetSegmentGeometry()
 {
-
-	glBegin(GL_QUADS);
-	glVertex3f(-segWidth, 0.1, -segLength);
-	glVertex3f(segWidth, 0.1, -segLength);
-	glVertex3f(segWidth, 0.1, segLength);
-	glVertex3f(-segWidth, 0.1, segLength);
-	glEnd();
-	numSegments++;
+	streetSegmentDL = glGenLists(1);
+	glNewList(streetSegmentDL, GL_COMPILE);
+		glColor3f(0.9, 0.9, 0.9);
+		glBegin(GL_QUADS);
+			glVertex3f(-segWidth, 0.1, -segLength);
+			glVertex3f(segWidth, 0.1, -segLength);
+			glVertex3f(segWidth, 0.1, segLength);
+			glVertex3f(-segWidth, 0.1, segLength);
+		glEnd();
+	glEndList();
 }
 
 void Streets::drawCityFloor()
@@ -113,14 +132,17 @@ void Streets::drawCityFloor()
 }
 void Streets::createMap()
 {
-	printf("Creating blocks...\n", numBlock);
+	printf("Creating blocks...\n");
 	createBlocks();
-	printf("%d Blocks created\n", numBlock);
+	printf("Total of %d buildings in %d Blocks created\n", numBuildings, numBlock);
+	printf("Generating geometries...\n");
+	createStreetSegmentGeometry();
 }
 
 void Streets::createBlocks()
 {
-	block tempBlock;
+	Block * tempBlock;
+	glm::vec3 tempStart, tempEnd;
 	int blockWidth = 100;
 	int blockLength = 200;
 
@@ -134,7 +156,7 @@ void Streets::createBlocks()
 		{
 			xCoord = rowX;
 			zCoord = rowZ;
-			tempBlock.start = glm::vec3(xCoord, 0.0, zCoord);
+			tempStart = glm::vec3(xCoord, 0.0, zCoord);
 
 			xCoord += blockWidth;
 			zCoord += blockLength;
@@ -163,20 +185,23 @@ void Streets::createBlocks()
 							zCoord += blockLength;
 					}
 				}
-					tempBlock.end = glm::vec3(xCoord, 0.0, zCoord);
-//					printf ("Block %d, start (%f,%f) end (%f,%f)\n", nBlock,
-//							tempBlock.start.x, tempBlock.start.z, tempBlock.end.x, tempBlock.end.z);
+				tempEnd = glm::vec3(xCoord, 0.0, zCoord);
+//				printf ("Block %d, start (%f,%f) end (%f,%f)\n", nBlock,
+//						tempBlock.start.x, tempBlock.start.z, tempBlock.end.x, tempBlock.end.z);
+				tempBlock = new Block(tempStart, tempEnd);
 
-					blocks.push_back(tempBlock);
+				numBuildings += tempBlock->generateBlock();
+				blocks.push_back(tempBlock);
 
-					insertIndex(tempBlock.end, numBlock);
-					numBlock++;
+				insertIndex(tempEnd, numBlock);
+				numBlock++;
 			}
 			rowX += blockWidth;
 		}
 		rowZ += blockLength;
 		rowX = 0;
 	}
+
 }
 
 void Streets::createAvenues()
