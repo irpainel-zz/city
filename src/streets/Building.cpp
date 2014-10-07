@@ -30,7 +30,6 @@ void Building::generateBuilding()
 		glColor3f(r, g, b);
 		glPushMatrix();
 			glTranslatef(0.0f, height/2.f, 0.0f);
-			//TODO something is wrong here
 			glScalef((width)/2, height, (length)/2);
 			glutSolidCube(1);
 		glPopMatrix();

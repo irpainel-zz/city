@@ -8,23 +8,22 @@ HEADERS = -Iinclude
 
 SFRAMEWORK = src/framework/PerformanceTimer.cpp src/framework/Keyboard.cpp src/framework/GlutFramework.cpp src/framework/GLerror.cpp
 
-
-
 SMATH = src/math/Arcball.cpp 
 SWINDOW = src/window/Viewport.cpp
 SRENDER = src/render/Render.cpp
 SSTREETS = src/streets/Streets.cpp src/streets/Block.cpp src/streets/Building.cpp
 SMATH = src/math/Random.cpp
+SLOADER = src/loader/ImageLoader.cpp
 
 
-SOURCES=main.cpp $(SRENDER) $(SMATH) $(SWINDOW) $(SSTREETS) $(SMATH) $(SFRAMEWORK)
+SOURCES=main.cpp $(SRENDER) $(SMATH) $(SWINDOW) $(SSTREETS) $(SMATH) $(SLOADER) $(SFRAMEWORK)
 OBJECTS=$(SOURCES:.cpp=.o)
 EXECUTABLE=city
 
 all: $(SOURCES) $(EXECUTABLE)
 
 $(EXECUTABLE): $(OBJECTS) 
-	$(CC) -o $@ $^ -lm -lGL -lGLU -lglut $(LPATH)
+	$(CC) -o $@ $^ -lm -lGL -lGLU -lglut -ljpeg -lpng16 -lm -lGLEW $(LPATH)
 	
 .cpp.o: 
 	$(CC) $(CFLAGS) -c -o $@ $^ $(IPATH) $(HEADERS)

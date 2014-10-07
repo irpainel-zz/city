@@ -7,10 +7,12 @@
 
 #include "Block.h"
 
-Block::Block(glm::vec3 s, glm::vec3 e) {
+Block::Block(glm::vec3 s, glm::vec3 e, int centreDistance, int isPark) {
 	start = s;
 	end = e;
 	intersections = 0;
+	this->centreDistance = centreDistance;
+	this->isPark = isPark;
 	blockDL = 0;
 	width = end.x - start.x;
 	length = end.z - start.z;
@@ -36,25 +38,47 @@ glm::vec3 Block::getEnd()
 
 int Block::generateBlock()
 {
-	unsigned int i;
-	coord c;
+	float rand = (Random::generateRandom(0, 10)+1)*10;
 
-	//split building lots
-	splitBlock();
+	if (isPark)
+	{
+		compilePark();
+	}
+	else
+	{
+		if (rand  > centreDistance)
+		{
+			newBuildingBlock();
+			compileBuildings();
+		}
+		else
+		{
+			newResidentialBlock();
+			compileBuildings();
+		}
+	}
+
+
+	check_gl_error();
+	return (int) buildings.size();
+}
+
+void Block::compilePark()
+{
 
 	blockDL = glGenLists(1);
 	glNewList(blockDL, GL_COMPILE);
-		glColor3f(0.0f, 1.0f, 0.0f);
-		glBegin(GL_QUADS);
-//			printf ("0: (%f,%f) \n", start.x , start.z);
-			glVertex3f(0.f , 0.f, 0.f);
-//			printf ("1: (%f,%f) \n", end.x , start.z);
-			glVertex3f(width, 0.f, 0.f);
-//			printf ("2: (%f,%f) \n", end.x , end.z);
-			glVertex3f(width, 0.f, length);
-//			printf ("3: (%f,%f) \n", start.x , end.z);
-			glVertex3f(0.f, 0.f, length);
-		glEnd();
+		drawBlockFloor();
+	glEndList();
+}
+void Block::compileBuildings()
+{
+	unsigned int i;
+	coord c;
+
+	blockDL = glGenLists(1);
+	glNewList(blockDL, GL_COMPILE);
+		drawBlockFloor();
 		for (i = 0; i < buildings.size(); ++i) {
 			c = lotCoords[i];
 			glPushMatrix();
@@ -63,11 +87,67 @@ int Block::generateBlock()
 			glPopMatrix();
 		}
 	glEndList();
-	check_gl_error();
-	return (int) buildings.size();
 }
 
-void Block::splitBlock()
+void Block::drawBlockFloor()
+{
+	glColor3f(0.0f, 1.0f, 0.0f);
+	glBegin(GL_QUADS);
+		glVertex3f(0.f , 0.f, 0.f);
+		glVertex3f(width, 0.f, 0.f);
+		glVertex3f(width, 0.f, length);
+		glVertex3f(0.f, 0.f, length);
+	glEnd();
+}
+void Block::newResidentialBlock()
+{
+	vector<float> x;
+	vector<float> z;
+	float sumX = 0;
+	float sumZ = 0;
+	int rand;
+	unsigned int i;
+	unsigned int j;
+
+	//insert coord 0 in x
+	x.push_back(sumX);
+	float sizeLot = width / 2;
+	sumX = sizeLot;
+	while (sumX <= width)
+	{
+		x.push_back(sumX);
+		sumX += sizeLot;
+
+	}
+
+	//insert coord 0 in z
+	z.push_back(sumZ);
+	rand = length / 5;
+	sumZ = rand;
+	while (sumZ <= length)
+	{
+		z.push_back(sumZ);
+		sumZ+=rand;
+	}
+	for (i = 0; i < x.size()-1; i++)
+	{
+		for (j = 0; j < z.size()-1; ++j) {
+			coord tempCoord;
+			tempCoord.start.x = x[i];
+			tempCoord.start.y = 0.0;
+			tempCoord.start.z = z[j];
+			tempCoord.end.x = x[i+1];
+			tempCoord.end.y = 0.0;
+			tempCoord.end.z = z[j+1];
+			tempCoord.width = x[i+1] - x[i];
+			tempCoord.length = z[j+1] - z[j];
+			lotCoords.push_back(tempCoord);
+			newHouse(tempCoord.width, tempCoord.length);
+		}
+	}
+}
+
+void Block::newBuildingBlock()
 {
 	vector<float> x;
 	vector<float> z;
@@ -112,7 +192,7 @@ void Block::splitBlock()
 			tempCoord.end.z = z[j+1];
 			tempCoord.width = x[i+1] - x[i];
 			tempCoord.length = z[j+1] - z[j];
-//			printf (" (%f,%f) (%f,%f)\n", x[i], z[j], x[i+1], z[j+1]);
+			//printf (" (%f,%f) (%f,%f)\n", x[i], z[j], x[i+1], z[j+1]);
 			lotCoords.push_back(tempCoord);
 			newBuilding(tempCoord.width, tempCoord.length);
 
@@ -120,10 +200,38 @@ void Block::splitBlock()
 	}
 }
 
+void Block::newHouse(float width, float length)
+{
+	Building * tempBuilding;
+	float height;
+	//random 1 - 3
+	float stories = (Random::generateRandom(0, 3)+1);
+	height = 2.5 * stories;
+	tempBuilding = new Building(width, length, height);
+	tempBuilding->generateBuilding();
+	buildings.push_back(tempBuilding);
+}
+
 void Block::newBuilding(float width, float length)
 {
 	Building * tempBuilding;
-	float height = Random::generateRandom(1, 10)*10;
+	float height;
+	//random 0 - 100;
+	float rand = (Random::generateRandom(0, 10)+1)*10;
+	//printf("change of a short building: %d, rand got %f\n", centreDistance, rand);
+	if (rand  > centreDistance)
+	{
+		rand = (Random::generateRandom(0, 10)+1);
+		if (rand < 6)
+			height = Random::generateRandom(4, 10)*10;
+		else
+			height = Random::generateRandom(1, 3)*10;
+	}
+	else
+	{
+		height = Random::generateRandom(1, 3)*10;
+	}
+
 	tempBuilding = new Building(width, length, height);
 	tempBuilding->generateBuilding();
 	buildings.push_back(tempBuilding);

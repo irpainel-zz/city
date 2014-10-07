@@ -11,7 +11,7 @@
 #include <GlutFramework.h>
 #include <iostream>
 #include <random>
-#include <bits/random.h>
+//#include <bits/random.h>
 
 class Random {
 public:

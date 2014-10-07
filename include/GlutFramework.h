@@ -36,7 +36,11 @@
 
 // **Note:** Include GLUT after the standard c++ libraries to prevent linker errors
 
-#ifdef WIN32
+#ifdef __APPLE__
+    #ifdef TARGET_OS_MAC
+        #include <GLUT/glut.h>
+    #endif
+#elif WIN32
 	#include <windows.h> 
 	#include <GL/glut.h> 
 #else

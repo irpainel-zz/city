@@ -26,7 +26,7 @@ typedef struct coord {
 
 class Block {
 public:
-	Block(glm::vec3 s, glm::vec3 e);
+	Block(glm::vec3 s, glm::vec3 e, int centreDistance, int isPark);
 	virtual ~Block();
 	glm::vec3 getStart();
 	glm::vec3 getEnd();
@@ -40,6 +40,8 @@ private:
 	float width;
 	float length;
 	int intersections;
+	int centreDistance;
+	int isPark;
 	GLuint blockDL;
 
 	vector<Building *> buildings;
@@ -49,7 +51,16 @@ private:
 
 	//methods
 	void splitBlock();
+	void newParkBlock();
+	void newBuildingBlock();
+	void newResidentialBlock();
 	void newBuilding(float width, float length);
+	void newHouse(float width, float length);
+
+	//compile display list
+	void compileBuildings();
+	void compilePark();
+	void drawBlockFloor();
 
 };
 

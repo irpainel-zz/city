@@ -35,7 +35,6 @@ Render::~Render() {
 
 void Render::display(float dTime)
 {
-	char info[50];
 	std::ostringstream oss;
 	float textColor[3] = {1.0f, 1.0f, 1.0f};
 	if (streets == NULL)

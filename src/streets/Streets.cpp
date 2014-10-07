@@ -26,6 +26,10 @@ Streets::Streets(int w, int l) {
 	numBlock = 0;
 	numBuildings = 0;
 
+	cityCentre = glm::vec3 (cityWidth/2.f, 0.f, cityLength/2.f);
+	distanceZeroToCentre = glm::distance(cityCentre, glm::vec3(0.f, 0.f, 0.f));
+	relation = 100.f/distanceZeroToCentre;
+
 }
 
 Streets::~Streets() {
@@ -45,6 +49,13 @@ void Streets::render()
 
 void Streets::drawStreets()
 {
+	glCallList(streetSegmentDL);
+}
+
+void Streets::createStreets()
+{
+	streetSegmentDL = glGenLists(1);
+	glNewList(streetSegmentDL, GL_COMPILE);
 	unsigned int i;
 	glm::vec3 blockSize;
 	//draw blocks
@@ -63,6 +74,7 @@ void Streets::drawStreets()
 			blocks[i]->renderBlock();
 		glPopMatrix();
 	}
+	glEndList();
 //	cout << "Segments: " << numSegments << endl;
 }
 
@@ -82,7 +94,7 @@ void Streets::drawStreetLine(glm::vec3 size)
 		glRotatef(90, 0.f, 1.0, 0.f);
 		glPushMatrix();
 		glTranslatef(0.0, 0.0, position);
-		glCallList(streetSegmentDL);
+		createStreetSegmentGeometry();
 		numSegments++;
 		position += segLength;
 		glPopMatrix();
@@ -96,7 +108,7 @@ void Streets::drawStreetLine(glm::vec3 size)
 	{
 		glPushMatrix();
 		glTranslatef(0.0, 0.0, position);
-		glCallList(streetSegmentDL);
+		createStreetSegmentGeometry();
 		numSegments++;
 		position += segLength;
 		glPopMatrix();
@@ -107,16 +119,15 @@ void Streets::drawStreetLine(glm::vec3 size)
 
 void Streets::createStreetSegmentGeometry()
 {
-	streetSegmentDL = glGenLists(1);
-	glNewList(streetSegmentDL, GL_COMPILE);
+//		GLuint texture = ImageLoader::readTexture("assets/textures/road/street1.jpg");
+
 		glColor3f(0.9, 0.9, 0.9);
 		glBegin(GL_QUADS);
-			glVertex3f(-segWidth, 0.1, -segLength);
-			glVertex3f(segWidth, 0.1, -segLength);
-			glVertex3f(segWidth, 0.1, segLength);
-			glVertex3f(-segWidth, 0.1, segLength);
+			glTexCoord2f(0.f, 0.f); glVertex3f(-segWidth, 0.1, -segLength);
+			glTexCoord2f(1.f, 0.f); glVertex3f(segWidth, 0.1, -segLength);
+			glTexCoord2f(1.f, 1.f); glVertex3f(segWidth, 0.1, segLength);
+			glTexCoord2f(0.f, 1.f); glVertex3f(-segWidth, 0.1, segLength);
 		glEnd();
-	glEndList();
 }
 
 void Streets::drawCityFloor()
@@ -136,15 +147,16 @@ void Streets::createMap()
 	createBlocks();
 	printf("Total of %d buildings in %d Blocks created\n", numBuildings, numBlock);
 	printf("Generating geometries...\n");
-	createStreetSegmentGeometry();
+	createStreets();
 }
 
 void Streets::createBlocks()
 {
 	Block * tempBlock;
 	glm::vec3 tempStart, tempEnd;
-	int blockWidth = 100;
-	int blockLength = 200;
+	int blockWidth = 50;
+	int blockLength = 100;
+	int isPark = FALSE;
 
 	int rowX=0, rowZ=0;
 	int xCoord, zCoord;
@@ -154,6 +166,7 @@ void Streets::createBlocks()
 	{
 		while (rowX < cityWidth)
 		{
+			isPark = FALSE;
 			xCoord = rowX;
 			zCoord = rowZ;
 			tempStart = glm::vec3(xCoord, 0.0, zCoord);
@@ -167,28 +180,35 @@ void Streets::createBlocks()
 				//the block is bigger than others? 10% of chance
 				if (Random::generateRandom(1, 10) == 1)
 				{
-//					cout << "RANDOM (BIGGER BLOCK)" << endl;
+					//cout << "RANDOM (BIGGER BLOCK)" << endl;
 					//Bigger in X or Z?
 					int rand = Random::generateRandom(1, 10);
 					if (rand <= 5)
 					{
 						//In X (Width)!
-//						cout << " in X" << endl;
+						//cout << " in X" << endl;
 						if (xCoord != cityWidth)
 							xCoord += blockWidth;
 					}
 					else
 					{
 						//In Z (Length)!
-//						cout << " in Z" << endl;
+						//cout << " in Z" << endl;
+						isPark = TRUE;
 						if (zCoord != cityLength)
 							zCoord += blockLength;
 					}
 				}
 				tempEnd = glm::vec3(xCoord, 0.0, zCoord);
-//				printf ("Block %d, start (%f,%f) end (%f,%f)\n", nBlock,
-//						tempBlock.start.x, tempBlock.start.z, tempBlock.end.x, tempBlock.end.z);
-				tempBlock = new Block(tempStart, tempEnd);
+				//printf ("Block %d, start (%f,%f) end (%f,%f)\n", nBlock,
+					//tempBlock.start.x, tempBlock.start.z, tempBlock.end.x, tempBlock.end.z);
+
+				float distanceFromCentre = abs(glm::distance(tempStart, cityCentre));
+
+				//scale distance from centre to a scale from 1 to 100;
+				int distanceToScale = (int) (relation * distanceFromCentre);
+				//printf ("(%f, %f) dist %d\n", tempStart.x, tempStart.z, relationCentreBlock);
+				tempBlock = new Block(tempStart, tempEnd, distanceToScale, isPark);
 
 				numBuildings += tempBlock->generateBlock();
 				blocks.push_back(tempBlock);

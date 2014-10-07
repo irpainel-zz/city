@@ -16,6 +16,7 @@
 #include "Block.h"
 #include "glm/glm.hpp"
 #include "GLerror.h"
+#include "ImageLoader.h"
 
 using namespace std;
 
@@ -31,6 +32,14 @@ private:
 	vector <Block*> blocks;
 	int numBlock;
 	int numBuildings;
+	glm::vec3 cityCentre;
+	//farthest point from centre - actually just (0,0) - (Centre.x, Centre.z)
+	float distanceZeroToCentre;
+	//relation from centre to block (in a scale from 0 - 100),
+	//a bit complicated explanation
+	//I am transforming the distance from the centre in a scale from 0 (close) - 100 (far)
+	//so its possible to use this distance in any map size
+	float relation;
 
 	GLuint streetSegmentDL;
 
@@ -47,6 +56,7 @@ private:
 	void drawStreetLine(glm::vec3 size);
 	void drawCityFloor();
 	void createStreetSegmentGeometry();
+	void defineCityCentre();
 
 	std::string concat(glm::vec3);
 	void insertIndex(glm::vec3, int);
