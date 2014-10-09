@@ -161,7 +161,7 @@ void Block::newBuildingBlock()
 	x.push_back(sumX);
 	while (sumX < width)
 	{
-		rand = Random::generateRandom(1, 5);
+		rand = Random::generateRandom(2, 5);
 		if (sumX+rand*10 > (width - 30))
 			sumX = width;
 		else
@@ -173,7 +173,7 @@ void Block::newBuildingBlock()
 	z.push_back(sumZ);
 	while (sumZ < length)
 	{
-		rand = Random::generateRandom(1, 5);
+		rand = Random::generateRandom(2, 5);
 		if (sumZ+rand*10 > (length - 30))
 			sumZ = length;
 		else

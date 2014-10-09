@@ -41,8 +41,12 @@ private:
 	//so its possible to use this distance in any map size
 	float relation;
 
-	GLuint streetSegmentDL;
+	GLuint streetSegmentRightDL;
+	GLuint streetSegmentLeftDL;
 	GLuint streetsDL;
+	GLuint cornerDL;
+	GLuint deadEndCrossDL;
+
 
 	std::map<std::string, int> blockIndex;
 
@@ -54,9 +58,10 @@ private:
 	void createStreets();
 	void createBlocks();
 	void drawStreets();
-	void drawStreetLine(glm::vec3 size);
+	void drawStreetLine(float length, int isLeft);
+	void drawOuterStreets();
 	void drawCityFloor();
-	void createStreetSegmentGeometry();
+	void createStreetGeometry();
 	void defineCityCentre();
 
 	std::string concat(glm::vec3);

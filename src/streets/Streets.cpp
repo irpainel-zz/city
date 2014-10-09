@@ -15,11 +15,14 @@ Streets::Streets(int w, int l) {
 
 	blocks.reserve(500);
 
-	segWidth= 3.0;
+	segWidth= 2.5;
 	segLength = 5.0;
 	numSegments = 0;
-	streetSegmentDL = 0;
+	streetSegmentLeftDL = 0;
+	streetSegmentRightDL = 0;
+	deadEndCrossDL = 0;
 	streetsDL = 0;
+	cornerDL = 0;
 
 	std::map<std::string, int> block;
 	blockIndex = block;
@@ -34,7 +37,9 @@ Streets::Streets(int w, int l) {
 }
 
 Streets::~Streets() {
-	glDeleteLists(streetSegmentDL, 1);
+	glDeleteLists(streetSegmentRightDL, 1);
+	glDeleteLists(streetSegmentLeftDL, 1);
+	glDeleteLists(deadEndCrossDL, 1);
 	glDeleteLists(streetsDL, 1);
 }
 
@@ -55,89 +60,204 @@ void Streets::drawStreets()
 
 void Streets::createStreets()
 {
+	unsigned int i;
+	float length;
+	glm::vec3 blockCoords;
+	glm::vec3 start, end;
+	float cornerTrans = segWidth/2.f;
 	streetsDL = glGenLists(1);
+	Block * tb;
 	glNewList(streetsDL, GL_COMPILE);
-		unsigned int i;
-		glm::vec3 blockSize;
 		//draw blocks
 		numSegments = 0;
 		for(i = 0; i<blocks.size(); i++)
 		{
-			blockSize = blocks[i]->getEnd() - blocks[i]->getStart();
+			tb = blocks[i];
+//			blockSize = blocks[i]->getEnd() - blocks[i]->getStart();
+			start = tb->getStart();
+			end = tb->getEnd();
+			blockCoords = tb->getEnd() - tb->getStart();
 			glPushMatrix();
-				glTranslatef(0.0, 0.0, blocks[i]->getStart().z);
-				glTranslatef(blocks[i]->getStart().x, 0.0, 0.0);
-				drawStreetLine(blockSize);
-			glPopMatrix();
-			glPushMatrix();
-				glTranslatef(blocks[i]->getStart().x, 0.f, blocks[i]->getStart().z);
-				blocks[i]->renderBlock();
+				//translate block to right place
+				glTranslatef(start.x, 0.0, start.z);
+				//create streets for the block
+				glPushMatrix();
+					//first side
+					length = end.z - start.z;
+					glPushMatrix();
+						glRotatef(180, 0.f, 1.f, 0.f);
+						glTranslatef(-cornerTrans, 0.f, -cornerTrans);
+						glCallList(cornerDL);
+					glPopMatrix();
+					drawStreetLine(length, FALSE);
+					glPushMatrix();
+						glTranslatef(cornerTrans, 0.0, blockCoords.z-cornerTrans);
+						glRotatef(-90, 0.f, 1.f, 0.f);
+						glCallList(cornerDL);
+					glPopMatrix();
+				glPopMatrix();
+				glPushMatrix();
+					//second side - opposite of first
+					glTranslatef(blockCoords.x, 0.f, blockCoords.z);
+					glRotatef(180, 0.f, 1.f, 0.f);
+					glPushMatrix();
+						glRotatef(180, 0.f, 1.f, 0.f);
+						glTranslatef(-cornerTrans, 0.f, -cornerTrans);
+						glCallList(cornerDL);
+					glPopMatrix();
+					drawStreetLine(length, FALSE);
+					glPushMatrix();
+						glTranslatef(cornerTrans, 0.0, blockCoords.z-cornerTrans);
+						glRotatef(-90, 0.f, 1.f, 0.f);
+						glCallList(cornerDL);
+					glPopMatrix();
+				glPopMatrix();
+				glPushMatrix();
+					//third side
+					length = end.x - start.x;
+					glRotatef(90, 0.f, 1.f, 0.f);
+					drawStreetLine(length, TRUE);
+				glPopMatrix();
+				glPushMatrix();
+					//fourth side - opposite of third
+					glTranslatef(blockCoords.x, 0.0, blockCoords.z);
+					glRotatef(270, 0.f, 1.f, 0.f);
+					drawStreetLine(length, TRUE);
+				glPopMatrix();
+
+				//draw block
+					blocks[i]->renderBlock();
 			glPopMatrix();
 		}
 	glEndList();
 //	cout << "Segments: " << numSegments << endl;
 }
 
-void Streets::drawStreetLine(glm::vec3 size)
+void Streets::drawStreetLine(float length, int isLeft)
 {
 	float position;
 	float finalPosition;
 
-	position = segLength;
-	finalPosition = size.x - segLength;
-	check_gl_error();
+	GLuint DL;
+	position = segWidth;
+	finalPosition = length-segWidth*2;
 
+	if (isLeft)
+		DL = streetSegmentLeftDL;
+	else
+		DL = streetSegmentRightDL;
 
 	while (position <= finalPosition)
 	{
 		glPushMatrix();
-		glRotatef(90, 0.f, 1.0, 0.f);
-		glPushMatrix();
 		glTranslatef(0.0, 0.0, position);
-		glCallList(streetSegmentDL);
+		glCallList(DL);
 		numSegments++;
 		position += segLength;
-		glPopMatrix();
 		glPopMatrix();
 	}
 
-	//draw streets in Z axis
-	position = segLength;
-	finalPosition = size.z - segLength;
-	while (position <= finalPosition)
-	{
-		glPushMatrix();
-		glTranslatef(0.0, 0.0, position);
-		glCallList(streetSegmentDL);
-		numSegments++;
-		position += segLength;
-		glPopMatrix();
-	}
+//	//draw streets in Z axis
+//	position = segWidth;
+//	finalPosition = size.z-segLength;
+//	while (position <= finalPosition)
+//	{
+//		glPushMatrix();
+//		glTranslatef(0.0, 0.0, position);
+//		glCallList(DL);
+//		numSegments++;
+//		position += segLength;
+//		glPopMatrix();
+//	}
 
 
 }
 
-void Streets::createStreetSegmentGeometry()
+void Streets::drawOuterStreets()
 {
+
+}
+void Streets::createStreetGeometry()
+{
+	float size;
+	GLuint crossTexture;
 	GLuint texture = ImageLoader::readTexture("assets/textures/road/street1.jpg");
 
-	streetSegmentDL = glGenLists(1);
-	glNewList(streetSegmentDL, GL_COMPILE);
+	streetSegmentLeftDL = glGenLists(1);
+	glNewList(streetSegmentLeftDL, GL_COMPILE);
 	glEnable(GL_TEXTURE_2D);
 
 	glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
 	glBindTexture(GL_TEXTURE_2D, texture);
-		glColor3f(0.9, 0.9, 0.9);
+	glColor3f(1.0, 1.0, 1.0);
 		glBegin(GL_QUADS);
-			glTexCoord2f(0.f, 0.f); glVertex3f(-segWidth, 0.1, -segLength);
-			glTexCoord2f(1.f, 0.f); glVertex3f(segWidth, 0.1, -segLength);
-			glTexCoord2f(1.f, 1.f); glVertex3f(segWidth, 0.1, segLength);
-			glTexCoord2f(0.f, 1.f); glVertex3f(-segWidth, 0.1, segLength);
+			glTexCoord2f(0.f, 0.f); glVertex3f(-segWidth, 0.01, 0.0);
+			glTexCoord2f(0.5f, 0.f); glVertex3f(0.0, 0.01, 0.0);
+			glTexCoord2f(0.5f, 1.f); glVertex3f(0.0, 0.01, segLength);
+			glTexCoord2f(0.f, 1.f); glVertex3f(-segWidth, 0.01, segLength);
 		glEnd();
 	glDisable(GL_TEXTURE_2D);
 	glBindTexture(GL_TEXTURE_2D, 0);
 	glEndList();
+
+	streetSegmentRightDL = glGenLists(1);
+	glNewList(streetSegmentRightDL, GL_COMPILE);
+	glEnable(GL_TEXTURE_2D);
+
+	glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
+	glBindTexture(GL_TEXTURE_2D, texture);
+	glColor3f(1.0, 1.0, 1.0);
+		glBegin(GL_QUADS);
+			glTexCoord2f(0.5f, 0.f); glVertex3f(0.0, 0.01, 0.0);
+			glTexCoord2f(1.f, 0.f); glVertex3f(segWidth, 0.01, 0.0);
+			glTexCoord2f(1.f, 1.f); glVertex3f(segWidth, 0.01, segLength);
+			glTexCoord2f(0.5f, 1.f); glVertex3f(0.0, 0.01, segLength);
+		glEnd();
+	glDisable(GL_TEXTURE_2D);
+	glBindTexture(GL_TEXTURE_2D, 0);
+	glEndList();
+
+
+	crossTexture = ImageLoader::readTexture("assets/textures/road/cross1.jpg");
+
+	deadEndCrossDL = glGenLists(1);
+	size = segWidth;
+	glNewList(deadEndCrossDL, GL_COMPILE);
+	glEnable(GL_TEXTURE_2D);
+	glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
+	glBindTexture(GL_TEXTURE_2D, crossTexture);
+	glColor3f(1.0, 1.0, 1.0);
+		glBegin(GL_QUADS);
+			glTexCoord2f(0.5f, 0.f); glVertex3f(0.0, 0.01, 0.0);
+			glTexCoord2f(1.f,  0.f); glVertex3f(size, 0.01, 0.0);
+			glTexCoord2f(1.f,  1.f); glVertex3f(size, 0.01, size*2);
+			glTexCoord2f(0.5f, 1.f); glVertex3f(0.0, 0.01, size*2);
+		glEnd();
+	glDisable(GL_TEXTURE_2D);
+	glBindTexture(GL_TEXTURE_2D, 0);
+	glEndList();
+
+	cornerDL = glGenLists(1);
+	size = segWidth;
+	glNewList(cornerDL, GL_COMPILE);
+	glEnable(GL_TEXTURE_2D);
+	glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
+	glBindTexture(GL_TEXTURE_2D, crossTexture);
+	glColor3f(1.0, 1.0, 1.0);
+		glBegin(GL_QUADS);
+			glTexCoord2f(0.f, 0.f); glVertex3f(-size/2.f, 0.01, -size/2.f);
+			glTexCoord2f(0.5f, 0.f); glVertex3f(size/2.f, 0.01, -size/2.f);
+			glTexCoord2f(0.5f, 0.5f); glVertex3f(size/2.f, 0.01, size/2.f);
+			glTexCoord2f(0.f, 0.5f); glVertex3f(-size/2.f, 0.01, size/2.f);
+		glEnd();
+	glDisable(GL_TEXTURE_2D);
+	glBindTexture(GL_TEXTURE_2D, 0);
+	glEndList();
+
+
 }
+
+
 
 void Streets::drawCityFloor()
 {
@@ -156,7 +276,7 @@ void Streets::createMap()
 	createBlocks();
 	printf("Total of %d buildings in %d Blocks created\n", numBuildings, numBlock);
 	printf("Generating geometries...\n");
-	createStreetSegmentGeometry();
+	createStreetGeometry();
 	createStreets();
 }
 
