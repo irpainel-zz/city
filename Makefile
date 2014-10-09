@@ -23,11 +23,7 @@ EXECUTABLE=city
 all: $(SOURCES) $(EXECUTABLE)
 
 $(EXECUTABLE): $(OBJECTS) 
-<<<<<<< Updated upstream
 	$(CC) -o $@ $^ -lm -lGL -lGLU -lglut -ljpeg -lm -lGLEW $(LPATH)
-=======
-	$(CC) -o $@ $^ -lm -lGL -lGLU -lglut -ljpeg -lpng15 -lm -lGLEW $(LPATH)
->>>>>>> Stashed changes
 	
 .cpp.o: 
 	$(CC) $(CFLAGS) -c -o $@ $^ $(IPATH) $(HEADERS)
