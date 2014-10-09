@@ -87,15 +87,12 @@ void Streets::createStreets()
 					glPushMatrix();
 						glRotatef(180, 0.f, 1.f, 0.f);
 						glTranslatef(-cornerTrans, 0.f, -cornerTrans);
-						glColor3f(1.0, 1.0, 1.0);
 						glCallList(cornerDL);
 					glPopMatrix();
-					glColor3f(1.0, 1.0, 1.0);
 					drawStreetLine(length, FALSE);
 					glPushMatrix();
 						glTranslatef(cornerTrans, 0.0, blockCoords.z-cornerTrans);
 						glRotatef(-90, 0.f, 1.f, 0.f);
-						glColor3f(1.0, 1.0, 1.0);
 						glCallList(cornerDL);
 					glPopMatrix();
 				glPopMatrix();
@@ -106,15 +103,12 @@ void Streets::createStreets()
 					glPushMatrix();
 						glRotatef(180, 0.f, 1.f, 0.f);
 						glTranslatef(-cornerTrans, 0.f, -cornerTrans);
-						glColor3f(1.0, 1.0, 1.0);
 						glCallList(cornerDL);
 					glPopMatrix();
-					glColor3f(1.0, 1.0, 1.0);
 					drawStreetLine(length, FALSE);
 					glPushMatrix();
 						glTranslatef(cornerTrans, 0.0, blockCoords.z-cornerTrans);
 						glRotatef(-90, 0.f, 1.f, 0.f);
-						glColor3f(1.0, 1.0, 1.0);
 						glCallList(cornerDL);
 					glPopMatrix();
 				glPopMatrix();
@@ -122,14 +116,12 @@ void Streets::createStreets()
 					//third side
 					length = end.x - start.x;
 					glRotatef(90, 0.f, 1.f, 0.f);
-					glColor3f(1.0, 1.0, 1.0);
 					drawStreetLine(length, TRUE);
 				glPopMatrix();
 				glPushMatrix();
 					//fourth side - opposite of third
 					glTranslatef(blockCoords.x, 0.0, blockCoords.z);
 					glRotatef(270, 0.f, 1.f, 0.f);
-					glColor3f(1.0, 1.0, 1.0);
 					drawStreetLine(length, TRUE);
 				glPopMatrix();
 
@@ -182,7 +174,7 @@ void Streets::createStreetGeometry()
 	glNewList(streetSegmentLeftDL, GL_COMPILE);
 	glEnable(GL_TEXTURE_2D);
 
-	glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
+	glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE);
 	glBindTexture(GL_TEXTURE_2D, texture);
 	glColor3f(1.0, 1.0, 1.0);
 		glBegin(GL_QUADS);
@@ -199,7 +191,7 @@ void Streets::createStreetGeometry()
 	glNewList(streetSegmentRightDL, GL_COMPILE);
 	glEnable(GL_TEXTURE_2D);
 
-	glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
+	glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE);
 	glBindTexture(GL_TEXTURE_2D, texture);
 	glColor3f(1.0, 1.0, 1.0);
 		glBegin(GL_QUADS);
@@ -219,7 +211,7 @@ void Streets::createStreetGeometry()
 	size = segWidth;
 	glNewList(deadEndCrossDL, GL_COMPILE);
 	glEnable(GL_TEXTURE_2D);
-	glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
+	glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE);
 	glBindTexture(GL_TEXTURE_2D, crossTexture);
 	glColor3f(1.0, 1.0, 1.0);
 		glBegin(GL_QUADS);
@@ -236,7 +228,7 @@ void Streets::createStreetGeometry()
 	size = segWidth;
 	glNewList(cornerDL, GL_COMPILE);
 	glEnable(GL_TEXTURE_2D);
-	glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
+	glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE);
 	glBindTexture(GL_TEXTURE_2D, crossTexture);
 	glColor3f(1.0, 1.0, 1.0);
 		glBegin(GL_QUADS);
