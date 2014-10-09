@@ -87,12 +87,15 @@ void Streets::createStreets()
 					glPushMatrix();
 						glRotatef(180, 0.f, 1.f, 0.f);
 						glTranslatef(-cornerTrans, 0.f, -cornerTrans);
+						glColor3f(1.0, 1.0, 1.0);
 						glCallList(cornerDL);
 					glPopMatrix();
+					glColor3f(1.0, 1.0, 1.0);
 					drawStreetLine(length, FALSE);
 					glPushMatrix();
 						glTranslatef(cornerTrans, 0.0, blockCoords.z-cornerTrans);
 						glRotatef(-90, 0.f, 1.f, 0.f);
+						glColor3f(1.0, 1.0, 1.0);
 						glCallList(cornerDL);
 					glPopMatrix();
 				glPopMatrix();
@@ -103,12 +106,15 @@ void Streets::createStreets()
 					glPushMatrix();
 						glRotatef(180, 0.f, 1.f, 0.f);
 						glTranslatef(-cornerTrans, 0.f, -cornerTrans);
+						glColor3f(1.0, 1.0, 1.0);
 						glCallList(cornerDL);
 					glPopMatrix();
+					glColor3f(1.0, 1.0, 1.0);
 					drawStreetLine(length, FALSE);
 					glPushMatrix();
 						glTranslatef(cornerTrans, 0.0, blockCoords.z-cornerTrans);
 						glRotatef(-90, 0.f, 1.f, 0.f);
+						glColor3f(1.0, 1.0, 1.0);
 						glCallList(cornerDL);
 					glPopMatrix();
 				glPopMatrix();
@@ -116,17 +122,19 @@ void Streets::createStreets()
 					//third side
 					length = end.x - start.x;
 					glRotatef(90, 0.f, 1.f, 0.f);
+					glColor3f(1.0, 1.0, 1.0);
 					drawStreetLine(length, TRUE);
 				glPopMatrix();
 				glPushMatrix();
 					//fourth side - opposite of third
 					glTranslatef(blockCoords.x, 0.0, blockCoords.z);
 					glRotatef(270, 0.f, 1.f, 0.f);
+					glColor3f(1.0, 1.0, 1.0);
 					drawStreetLine(length, TRUE);
 				glPopMatrix();
 
 				//draw block
-					blocks[i]->renderBlock();
+				blocks[i]->renderBlock();
 			glPopMatrix();
 		}
 	glEndList();
@@ -156,19 +164,6 @@ void Streets::drawStreetLine(float length, int isLeft)
 		position += segLength;
 		glPopMatrix();
 	}
-
-//	//draw streets in Z axis
-//	position = segWidth;
-//	finalPosition = size.z-segLength;
-//	while (position <= finalPosition)
-//	{
-//		glPushMatrix();
-//		glTranslatef(0.0, 0.0, position);
-//		glCallList(DL);
-//		numSegments++;
-//		position += segLength;
-//		glPopMatrix();
-//	}
 
 
 }
