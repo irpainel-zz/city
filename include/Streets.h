@@ -42,6 +42,7 @@ private:
 	float relation;
 
 	GLuint streetSegmentDL;
+	GLuint streetsDL;
 
 	std::map<std::string, int> blockIndex;
 

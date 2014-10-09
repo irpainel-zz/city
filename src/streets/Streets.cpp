@@ -19,6 +19,7 @@ Streets::Streets(int w, int l) {
 	segLength = 5.0;
 	numSegments = 0;
 	streetSegmentDL = 0;
+	streetsDL = 0;
 
 	std::map<std::string, int> block;
 	blockIndex = block;
@@ -34,13 +35,13 @@ Streets::Streets(int w, int l) {
 
 Streets::~Streets() {
 	glDeleteLists(streetSegmentDL, 1);
+	glDeleteLists(streetsDL, 1);
 }
 
 void Streets::render()
 {
 	numSegments = 0;
 	glPushMatrix();
-//	drawCityFloor();
 	drawStreets();
 	glPopMatrix();
 //	cout << "Segments: " << numSegments << endl;
@@ -49,31 +50,30 @@ void Streets::render()
 
 void Streets::drawStreets()
 {
-	glCallList(streetSegmentDL);
+	glCallList(streetsDL);
 }
 
 void Streets::createStreets()
 {
-	streetSegmentDL = glGenLists(1);
-	glNewList(streetSegmentDL, GL_COMPILE);
-	unsigned int i;
-	glm::vec3 blockSize;
-	//draw blocks
-	numSegments = 0;
-	for(i = 0; i<blocks.size(); i++)
-	{
-
-		blockSize = blocks[i]->getEnd() - blocks[i]->getStart();
-		glPushMatrix();
-			glTranslatef(0.0, 0.0, blocks[i]->getStart().z);
-			glTranslatef(blocks[i]->getStart().x, 0.0, 0.0);
-			drawStreetLine(blockSize);
-		glPopMatrix();
-		glPushMatrix();
-			glTranslatef(blocks[i]->getStart().x, 0.f, blocks[i]->getStart().z);
-			blocks[i]->renderBlock();
-		glPopMatrix();
-	}
+	streetsDL = glGenLists(1);
+	glNewList(streetsDL, GL_COMPILE);
+		unsigned int i;
+		glm::vec3 blockSize;
+		//draw blocks
+		numSegments = 0;
+		for(i = 0; i<blocks.size(); i++)
+		{
+			blockSize = blocks[i]->getEnd() - blocks[i]->getStart();
+			glPushMatrix();
+				glTranslatef(0.0, 0.0, blocks[i]->getStart().z);
+				glTranslatef(blocks[i]->getStart().x, 0.0, 0.0);
+				drawStreetLine(blockSize);
+			glPopMatrix();
+			glPushMatrix();
+				glTranslatef(blocks[i]->getStart().x, 0.f, blocks[i]->getStart().z);
+				blocks[i]->renderBlock();
+			glPopMatrix();
+		}
 	glEndList();
 //	cout << "Segments: " << numSegments << endl;
 }
@@ -94,7 +94,7 @@ void Streets::drawStreetLine(glm::vec3 size)
 		glRotatef(90, 0.f, 1.0, 0.f);
 		glPushMatrix();
 		glTranslatef(0.0, 0.0, position);
-		createStreetSegmentGeometry();
+		glCallList(streetSegmentDL);
 		numSegments++;
 		position += segLength;
 		glPopMatrix();
@@ -108,7 +108,7 @@ void Streets::drawStreetLine(glm::vec3 size)
 	{
 		glPushMatrix();
 		glTranslatef(0.0, 0.0, position);
-		createStreetSegmentGeometry();
+		glCallList(streetSegmentDL);
 		numSegments++;
 		position += segLength;
 		glPopMatrix();
@@ -119,8 +119,14 @@ void Streets::drawStreetLine(glm::vec3 size)
 
 void Streets::createStreetSegmentGeometry()
 {
-//		GLuint texture = ImageLoader::readTexture("assets/textures/road/street1.jpg");
+	GLuint texture = ImageLoader::readTexture("assets/textures/road/street1.jpg");
 
+	streetSegmentDL = glGenLists(1);
+	glNewList(streetSegmentDL, GL_COMPILE);
+	glEnable(GL_TEXTURE_2D);
+
+	glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
+	glBindTexture(GL_TEXTURE_2D, texture);
 		glColor3f(0.9, 0.9, 0.9);
 		glBegin(GL_QUADS);
 			glTexCoord2f(0.f, 0.f); glVertex3f(-segWidth, 0.1, -segLength);
@@ -128,6 +134,9 @@ void Streets::createStreetSegmentGeometry()
 			glTexCoord2f(1.f, 1.f); glVertex3f(segWidth, 0.1, segLength);
 			glTexCoord2f(0.f, 1.f); glVertex3f(-segWidth, 0.1, segLength);
 		glEnd();
+	glDisable(GL_TEXTURE_2D);
+	glBindTexture(GL_TEXTURE_2D, 0);
+	glEndList();
 }
 
 void Streets::drawCityFloor()
@@ -147,6 +156,7 @@ void Streets::createMap()
 	createBlocks();
 	printf("Total of %d buildings in %d Blocks created\n", numBuildings, numBlock);
 	printf("Generating geometries...\n");
+	createStreetSegmentGeometry();
 	createStreets();
 }
 

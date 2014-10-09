@@ -12,6 +12,7 @@
 #include "GlutFramework.h"
 #include "Viewport.h"
 #include "Streets.h"
+#include "Camera.h"
 
 using namespace glutFramework;
 
@@ -43,7 +44,7 @@ public:
 	 @param x - the x coordinate
 	 @param y - the y coordinate
 	 */
-	void mouseMove(int x, int y);
+	void mouseMovePassive(int x, int y);
 
 	/** The keyboard function is called when a standard key is pressed down.
 	 @param key - the key press
@@ -81,6 +82,8 @@ public:
 	void setOrtho2D();
 	void setCamera();
 
+	void moveCamera();
+
 	void rotTh(int v);
 
 private:
@@ -91,12 +94,19 @@ private:
 	//keyboard key
 	int keyDown;
 
+	//mouse button
+	bool mouseLeftDown;
+	bool mouseRightDown;
+
 	int winWidth, winHeight;
+	int midWindowX, midWindowY;
 	int frame,time,timebase;
 	string fpsInfo;
 
 	Streets * streets;
+	Camera * camera;
 
+	void Timer(int value);
 };
 
 

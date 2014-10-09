@@ -25,7 +25,6 @@
 #include "GlutFramework.h"
 
 namespace glutFramework {
-	
 
 	// Set constants
 	const double GlutFramework::FRAME_TIME = 1.0 / GlutFramework::FPS * 1000.0; // Milliseconds
@@ -37,12 +36,13 @@ namespace glutFramework {
 		elapsedTimeInSeconds = 0;
 		frameTimeElapsed = 0;
 		title = "Procedural City";
-		eyeVector = Vector<float>(0.0, 0.0, -10.0); // move the eye position back
+		eyeVector = glm::vec3(0.0, 0.0, -10.0); // move the eye position back
 		position = 0.0f;
 		direction = 1.0 / FRAME_TIME;
 		//	menu
 		mainMenu = 0;
 		menuFlag = 0;
+
 	}
 	
 	GlutFramework::~GlutFramework() {
@@ -61,6 +61,7 @@ namespace glutFramework {
 		glutReshapeFunc(reshapeWrapper);
 		glutMouseFunc(mouseButtonPressWrapper);
 		glutMotionFunc(mouseMoveWrapper);
+		glutPassiveMotionFunc(mouseMovePassiveWrapper);
 		glutDisplayFunc(displayWrapper);
 		glutKeyboardFunc(keyboardDownWrapper);
 		glutKeyboardUpFunc(keyboardUpWrapper);
@@ -91,7 +92,11 @@ namespace glutFramework {
 	}
 
 	void GlutFramework::mouseMove(int x, int y) {
-		printf("MouseMove: x: %d y: %d\n", x, y);
+//		printf("MouseMove: x: %d y: %d\n", x, y);
+	}
+
+	void GlutFramework::mouseMovePassive(int x, int y) {
+//			printf("MouseMove: x: %d y: %d\n", x, y);
 	}
 
 	void GlutFramework::keyboardDown( unsigned char key, int x, int y )
@@ -197,20 +202,20 @@ namespace glutFramework {
 	void GlutFramework::setLookAt(float eyeX, float eyeY, float eyeZ, 
 								  float centerX, float centerY, float centerZ, float upX, float upY, float upZ) {
 		
-		eyeVector = Vector<float>(eyeX, eyeY, eyeZ);
-		centerVector = Vector<float>(centerX, centerY, centerZ);
-		upVector = Vector<float>(upX, upY, upZ);
+		eyeVector = glm::vec3(eyeX, eyeY, eyeZ);
+		centerVector = glm::vec3(centerX, centerY, centerZ);
+		upVector = glm::vec3(upX, upY, upZ);
 	}
 	
-	Vector<float> GlutFramework::getEyeVector() const {
+	glm::vec3 GlutFramework::getEyeVector() const {
 		return eyeVector;
 	}
 	
-	Vector<float> GlutFramework::getCenterVector() const {
+	glm::vec3 GlutFramework::getCenterVector() const {
 		return centerVector;
 	}
 	
-	Vector<float> GlutFramework::getUpVector() const {
+	glm::vec3 GlutFramework::getUpVector() const {
 		return upVector;
 	}
 	
@@ -297,6 +302,10 @@ namespace glutFramework {
 	
 	void GlutFramework::mouseMoveWrapper(int x, int y) {
 		instance->mouseMove(x, y);
+	}
+
+	void GlutFramework::mouseMovePassiveWrapper(int x, int y) {
+			instance->mouseMovePassive(x, y);
 	}
 										 
 	void GlutFramework::keyboardDownWrapper(unsigned char key, int x, int y) {

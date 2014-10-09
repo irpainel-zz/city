@@ -33,17 +33,20 @@
 #include <string.h>
 #include <cstddef>
 #include "define.h"
+#include "glm/glm.hpp"
 
 // **Note:** Include GLUT after the standard c++ libraries to prevent linker errors
 
 #ifdef __APPLE__
     #ifdef TARGET_OS_MAC
+		#include <GL/glew.h>
         #include <GLUT/glut.h>
     #endif
 #elif WIN32
 	#include <windows.h> 
 	#include <GL/glut.h> 
 #else
+	#include <GL/glew.h>
 	#include <GL/glut.h>
 #endif
 
@@ -95,9 +98,9 @@ namespace glutFramework {
 		static GlutFramework *instance;
 		
 		
-		Vector<float> eyeVector;
-		Vector<float> centerVector;
-		Vector<float> upVector;
+		glm::vec3 eyeVector;
+		glm::vec3 centerVector;
+		glm::vec3 upVector;
 		
 		float position;
 		float direction;
@@ -156,6 +159,7 @@ namespace glutFramework {
 		 @param y - the y coordinate
 		 */
 		virtual void mouseMove(int x, int y);
+		virtual void mouseMovePassive(int x, int y);
 		
 		/** The keyboard function is called when a standard key is pressed down.
 		 @param key - the key press
@@ -214,17 +218,17 @@ namespace glutFramework {
 		/** The position of the "eye" or camera in 3D space 
 		 @return a 3D vector
 		 */
-		Vector<float> getEyeVector() const;
+		glm::vec3 getEyeVector() const;
 		
 		/** The position that the "eye" or camera is looking at in 3D space 
 		 @return a 3D vector
 		 */
-		Vector<float> getCenterVector() const;
+		glm::vec3 getCenterVector() const;
 		
 		/** The up vector, used to determine orientation. Normally set to (0,1,0) 
 		 @return a 3D vector
 		 */
-		Vector<float> getUpVector() const;
+		glm::vec3 getUpVector() const;
 		
 		/** Sets the title of the window to a specific string. Invoke before startFramework() 
 		 @param title - the name of the window 
@@ -255,6 +259,7 @@ namespace glutFramework {
 		static void runWrapper();
 		static void mouseButtonPressWrapper(int button, int state, int x, int y);
 		static void mouseMoveWrapper(int x, int y);
+		static void mouseMovePassiveWrapper(int x, int y);
 		static void keyboardDownWrapper(unsigned char key, int x, int y);
 		static void keyboardUpWrapper(unsigned char key, int x, int y);
 		static void specialKeyboardDownWrapper(int key, int x, int y);
