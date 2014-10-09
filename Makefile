@@ -1,5 +1,5 @@
 CC = g++
-CFLAGS = -g -std=c++11 -Wall -Wextra -pedantic
+CFLAGS = -g -std=c++11 -pedantic
 IPATH = -I/usr/X11/include -I/usr/pkg/include
 LPATH = -L/usr/X11/lib -L/usr/pkg/lib
 LDPATH = -Wl,-R/usr/pkg/lib 

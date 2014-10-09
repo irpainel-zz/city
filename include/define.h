@@ -33,8 +33,8 @@ using namespace std;
 
 // Projection parameters
 #define G308_FOVY		60.0
-#define G308_ZNEAR_3D	-50
-#define G308_ZFAR_3D	200.0
+#define G308_ZNEAR_3D	0.01
+#define G308_ZFAR_3D	2000.0
 #define G308_ZNEAR_2D	-50.0
 #define G308_ZFAR_2D	50.0
 

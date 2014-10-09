@@ -76,6 +76,7 @@ void Render::display(float dTime)
 		glColor3f(0.5,0.5,0.5);
 		streets->render();
 		Viewport::drawAxes(1);
+
 	glPopMatrix();
 
 
@@ -212,6 +213,7 @@ void Render::setCamera()
 	gluPerspective(G308_FOVY, (double) winWidth / (double) winHeight, G308_ZNEAR_3D, G308_ZFAR_3D);
 //	glMatrixMode(GL_MODELVIEW);
 //	glLoadIdentity();
+
 //
 //	gluLookAt(eyeVector.x, eyeVector.y, eyeVector.z,
 //			  centerVector.x, centerVector.y, centerVector.z,
