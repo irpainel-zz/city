@@ -53,6 +53,8 @@ private:
 
 	float segWidth, segLength;
 	int numSegments;
+	const static int blockWidth = 50;
+	const static int blockLength = 100;
 
 	void createAvenues();
 	void createStreets();

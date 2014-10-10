@@ -13,7 +13,7 @@ Camera::Camera() {
 
 	SetPos(0, 0, 0);
 
-	translation_speed = 0.1;
+	translation_speed = 1.1;
 	rotation_speed = M_PI/180*0.1;
 
 }

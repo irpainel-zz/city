@@ -34,6 +34,7 @@ Streets::Streets(int w, int l) {
 	distanceZeroToCentre = glm::distance(cityCentre, glm::vec3(0.f, 0.f, 0.f));
 	relation = 100.f/distanceZeroToCentre;
 
+
 }
 
 Streets::~Streets() {
@@ -73,12 +74,12 @@ void Streets::createStreets()
 		for(i = 0; i<blocks.size(); i++)
 		{
 			tb = blocks[i];
-//			blockSize = blocks[i]->getEnd() - blocks[i]->getStart();
 			start = tb->getStart();
 			end = tb->getEnd();
+			//world coordinates to local coords
 			blockCoords = tb->getEnd() - tb->getStart();
 			glPushMatrix();
-				//translate block to right place
+				//translate block to right place, in world coordinates
 				glTranslatef(start.x, 0.0, start.z);
 				//create streets for the block
 				glPushMatrix();
@@ -89,7 +90,48 @@ void Streets::createStreets()
 						glTranslatef(-cornerTrans, 0.f, -cornerTrans);
 						glCallList(cornerDL);
 					glPopMatrix();
-					drawStreetLine(length, FALSE);
+					if (length > blockLength)
+					{
+						//bigger block, park
+						drawStreetLine(length/2.f, FALSE);
+						glPushMatrix();
+							glTranslatef(0.f, 0.f, segWidth+blockCoords.z/2.f);
+							glRotatef(90, 0.f, 1.f, 0.f);
+							glCallList(deadEndCrossDL);
+						glPopMatrix();
+						glPushMatrix();
+							glTranslatef(0.f, 0.f, blockCoords.z/2.f);
+							drawStreetLine(length/2.f, FALSE);
+						glPopMatrix();
+					}
+					else
+					{
+						drawStreetLine(length, FALSE);
+					}
+					//outer street
+					if (start.x == 0)
+					{
+						if (start.z == 0)
+						{
+							glPushMatrix();
+								glRotatef(0, 0.f, 1.f, 0.f);
+								glTranslatef(-cornerTrans, 0.f, -cornerTrans);
+								glCallList(cornerDL);
+							glPopMatrix();
+						}
+						glPushMatrix();
+							glRotatef(90, 0.f, 1.f, 0.f);
+							glTranslatef(-cornerTrans, 0.f, -cornerTrans);
+							glCallList(cornerDL);
+						glPopMatrix();
+						drawStreetLine(length, TRUE);
+						glPushMatrix();
+							glTranslatef(-cornerTrans, 0.0, blockCoords.z-cornerTrans);
+							glRotatef(0, 0.f, 1.f, 0.f);
+							glCallList(cornerDL);
+						glPopMatrix();
+
+					}
 					glPushMatrix();
 						glTranslatef(cornerTrans, 0.0, blockCoords.z-cornerTrans);
 						glRotatef(-90, 0.f, 1.f, 0.f);
@@ -105,7 +147,48 @@ void Streets::createStreets()
 						glTranslatef(-cornerTrans, 0.f, -cornerTrans);
 						glCallList(cornerDL);
 					glPopMatrix();
-					drawStreetLine(length, FALSE);
+					if (length > blockLength)
+					{
+						//bigger block, park
+						drawStreetLine(length/2.f, FALSE);
+						glPushMatrix();
+							glTranslatef(0.f, 0.f, segWidth+blockCoords.z/2.f);
+							glRotatef(90, 0.f, 1.f, 0.f);
+							glCallList(deadEndCrossDL);
+						glPopMatrix();
+						glPushMatrix();
+							glTranslatef(0.f, 0.f, blockCoords.z/2.f);
+							drawStreetLine(length/2.f, FALSE);
+						glPopMatrix();
+					}
+					else
+					{
+						drawStreetLine(length, FALSE);
+					}
+					//outer street
+					if (end.x == cityWidth)
+					{
+						if (end.z == cityLength)
+						{
+							glPushMatrix();
+								glRotatef(0, 0.f, 1.f, 0.f);
+								glTranslatef(-cornerTrans, 0.f, -cornerTrans);
+								glCallList(cornerDL);
+							glPopMatrix();
+						}
+						glPushMatrix();
+							glRotatef(90, 0.f, 1.f, 0.f);
+							glTranslatef(-cornerTrans, 0.f, -cornerTrans);
+							glCallList(cornerDL);
+						glPopMatrix();
+						drawStreetLine(length, TRUE);
+						glPushMatrix();
+							glTranslatef(-cornerTrans, 0.0, blockCoords.z-cornerTrans);
+							glRotatef(0, 0.f, 1.f, 0.f);
+							glCallList(cornerDL);
+						glPopMatrix();
+
+					}
 					glPushMatrix();
 						glTranslatef(cornerTrans, 0.0, blockCoords.z-cornerTrans);
 						glRotatef(-90, 0.f, 1.f, 0.f);
@@ -116,13 +199,105 @@ void Streets::createStreets()
 					//third side
 					length = end.x - start.x;
 					glRotatef(90, 0.f, 1.f, 0.f);
-					drawStreetLine(length, TRUE);
+					if (length > blockWidth)
+					{
+						//bigger block, park
+						drawStreetLine(length/2.f, TRUE);
+						glPushMatrix();
+							glTranslatef(0.f, 0.f, blockCoords.x/2.f-segWidth);
+							glRotatef(270, 0.f, 1.f, 0.f);
+							glCallList(deadEndCrossDL);
+						glPopMatrix();
+						glPushMatrix();
+							glTranslatef(0.f, 0.f, blockCoords.x/2.f);
+							drawStreetLine(length/2.f, TRUE);
+						glPopMatrix();
+					}
+					else
+					{
+						drawStreetLine(length, TRUE);
+					}
+					//outer street
+					if (start.z == 0)
+					{
+						if (end.x == cityWidth)
+						{
+							glPushMatrix();
+								glTranslatef(cornerTrans, 0.f, blockCoords.z/2+cornerTrans);
+								glRotatef(180, 0.f, 1.f, 0.f);
+								glCallList(cornerDL);
+							glPopMatrix();
+						}
+						glPushMatrix();
+							glRotatef(180, 0.f, 1.f, 0.f);
+							glTranslatef(-cornerTrans, 0.f, -cornerTrans);
+							glCallList(cornerDL);
+						glPopMatrix();
+						drawStreetLine(length, FALSE);
+						glPushMatrix();
+							glTranslatef(cornerTrans, 0.f, blockCoords.x-cornerTrans);
+							glRotatef(270, 0.f, 1.f, 0.f);
+							glCallList(cornerDL);
+						glPopMatrix();
+
+					}
 				glPopMatrix();
 				glPushMatrix();
 					//fourth side - opposite of third
 					glTranslatef(blockCoords.x, 0.0, blockCoords.z);
 					glRotatef(270, 0.f, 1.f, 0.f);
-					drawStreetLine(length, TRUE);
+					if (length > blockWidth)
+					{
+						//bigger block, park
+						drawStreetLine(length/2.f, TRUE);
+						glPushMatrix();
+							glTranslatef(0.f, 0.f, blockCoords.x/2.f-segWidth);
+							glRotatef(270, 0.f, 1.f, 0.f);
+							glCallList(deadEndCrossDL);
+						glPopMatrix();
+						glPushMatrix();
+							glTranslatef(0.f, 0.f, blockCoords.x/2.f);
+							drawStreetLine(length/2.f, TRUE);
+						glPopMatrix();
+					}
+					else
+					{
+						drawStreetLine(length, TRUE);
+					}
+					//outer street
+					if (end.z == cityLength)
+					{
+						if (end.x == cityWidth)
+						{
+							glPushMatrix();
+								glTranslatef(cornerTrans, 0.f, blockCoords.z/2+cornerTrans);
+								glRotatef(180, 0.f, 1.f, 0.f);
+								glCallList(cornerDL);
+							glPopMatrix();
+						}
+						if (start.x == 0)
+						{
+
+							glPushMatrix();
+								glTranslatef(cornerTrans, 0.f, blockCoords.z/2+cornerTrans);
+								glRotatef(180, 0.f, 1.f, 0.f);
+								glCallList(cornerDL);
+							glPopMatrix();
+						}
+
+						glPushMatrix();
+							glRotatef(180, 0.f, 1.f, 0.f);
+							glTranslatef(-cornerTrans, 0.f, -cornerTrans);
+							glCallList(cornerDL);
+						glPopMatrix();
+						drawStreetLine(length, FALSE);
+						glPushMatrix();
+							glTranslatef(cornerTrans, 0.f, blockCoords.x-cornerTrans);
+							glRotatef(270, 0.f, 1.f, 0.f);
+							glCallList(cornerDL);
+						glPopMatrix();
+
+					}
 				glPopMatrix();
 
 				//draw block
@@ -205,7 +380,7 @@ void Streets::createStreetGeometry()
 	glEndList();
 
 
-	crossTexture = ImageLoader::readTexture("assets/textures/road/cross1.jpg");
+	crossTexture = ImageLoader::readTexture("assets/textures/road/cross2.jpg");
 
 	deadEndCrossDL = glGenLists(1);
 	size = segWidth;
@@ -215,10 +390,10 @@ void Streets::createStreetGeometry()
 	glBindTexture(GL_TEXTURE_2D, crossTexture);
 	glColor3f(1.0, 1.0, 1.0);
 		glBegin(GL_QUADS);
-			glTexCoord2f(0.5f, 0.f); glVertex3f(0.0, 0.01, 0.0);
-			glTexCoord2f(1.f,  0.f); glVertex3f(size, 0.01, 0.0);
-			glTexCoord2f(1.f,  1.f); glVertex3f(size, 0.01, size*2);
-			glTexCoord2f(0.5f, 1.f); glVertex3f(0.0, 0.01, size*2);
+			glTexCoord2f(0.f, 0.5f); glVertex3f(0.0, 0.01, 0.0);
+			glTexCoord2f(1.f,  0.5f); glVertex3f(size*2.f, 0.01, 0.0);
+			glTexCoord2f(1.f,  1.f); glVertex3f(size*2.f, 0.01, size);
+			glTexCoord2f(0.f, 1.f); glVertex3f(0.0, 0.01, size);
 		glEnd();
 	glDisable(GL_TEXTURE_2D);
 	glBindTexture(GL_TEXTURE_2D, 0);
@@ -271,8 +446,6 @@ void Streets::createBlocks()
 {
 	Block * tempBlock;
 	glm::vec3 tempStart, tempEnd;
-	int blockWidth = 50;
-	int blockLength = 100;
 	int isPark = FALSE;
 
 	int rowX=0, rowZ=0;
