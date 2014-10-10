@@ -38,10 +38,11 @@
 // **Note:** Include GLUT after the standard c++ libraries to prevent linker errors
 
 #ifdef __APPLE__
-    #ifdef TARGET_OS_MAC
-		#include <GL/glew.h>
+	#include "TargetConditionals.h"
+  #ifdef TARGET_OS_MAC
     #include <GLUT/glut.h>
-    #endif
+		#include <OpenGL/gl.h>
+  #endif
 #elif WIN32
 	#include <windows.h>
 	#include <GL/glut.h>
