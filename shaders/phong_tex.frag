@@ -1,7 +1,7 @@
 
 varying vec3 vN;
 varying vec3 v; 
-#define MAX_LIGHTS 4
+#define MAX_LIGHTS 1
 uniform sampler2D tex;
 
 void main (void) 

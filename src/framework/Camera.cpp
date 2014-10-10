@@ -11,7 +11,7 @@ Camera::Camera() {
 	m_yaw = 0.0;
 	m_pitch = 0.0;
 
-	SetPos(0, 0, 0);
+	SetPos(0, 1, 0);
 
 	translation_speed = 0.1;
 	rotation_speed = M_PI/180*0.1;

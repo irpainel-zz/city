@@ -71,15 +71,7 @@ void Render::display(float dTime)
 		frame = 0;
 	}
 
-//	glutSolidTeapot(1);
 	glEnable(GL_NORMALIZE);
-//	glPushMatrix();
-//		glMatrixMode( GL_PROJECTION );
-//		glLoadIdentity();
-//		gluOrtho2D(0, winWidth, 0, winHeight);
-//		Viewport::RenderString(5.0f, 5.0f, GLUT_BITMAP_TIMES_ROMAN_24, fpsInfo.c_str(), textColor);
-//		glMatrixMode( GL_MODELVIEW );
-//	glPopMatrix();
 	glutSetWindowTitle(fpsInfo.c_str());
 	glPushMatrix();
 		setCamera();
@@ -90,8 +82,9 @@ void Render::display(float dTime)
 		glScalef(0.05, 0.05, 0.05);
 		setupLights();
 		glColor3f(0.5,0.5,0.5);
+		glUseProgram(phong);
 		streets->render();
-		Viewport::drawAxes(1);
+		glUseProgram(0);
 		glPopMatrix();
 
 	glPopMatrix();
@@ -255,8 +248,8 @@ void Render::setupLights() {
 void Render::setShaders()
 {
 
-//	phong = createProgram("shaders/phong.frag", "shaders/phong.vert");
-//	tex = createProgram("shaders/phong_tex.frag", "shaders/phong_tex.vert");
+	phong = createProgram("shaders/phong.frag", "shaders/phong.vert");
+	tex = createProgram("shaders/phong_tex.frag", "shaders/phong_tex.vert");
 //	bump = createProgram("shaders/phong_bump.frag", "shaders/phong_bump.vert");
 	cubemap = createProgram("shaders/skybox.frag", "shaders/skybox.vert");
 //	reflection = createProgram("shaders/phong_reflection.frag", "shaders/phong_reflection.vert");
