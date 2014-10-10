@@ -33,23 +33,24 @@
 #include <string.h>
 #include <cstddef>
 #include "define.h"
+#include "textfile.h"
 #include "glm/glm.hpp"
 
 // **Note:** Include GLUT after the standard c++ libraries to prevent linker errors
 
-#ifdef __APPLE__
-	#include "TargetConditionals.h"
-  #ifdef TARGET_OS_MAC
-    #include <GLUT/glut.h>
-		#include <OpenGL/gl.h>
-  #endif
-#elif WIN32
-	#include <windows.h>
-	#include <GL/glut.h>
-#else
+//#ifdef __APPLE__
+//	#include "TargetConditionals.h"
+//  #ifdef TARGET_OS_MAC
+//    #include <GLUT/glut.h>
+//		#include <OpenGL/gl.h>
+//  #endif
+//#elif WIN32
+//	#include <windows.h>
+//	#include <GL/glut.h>
+//#else
 	#include <GL/glew.h>
 	#include <GL/glut.h>
-#endif
+//#endif
 
 
 #include "Keyboard.h"
@@ -207,6 +208,11 @@ namespace glutFramework {
 		/** Sets up basic lighting */
 		virtual void setupLights();
 		
+		/** Sets up the shaders */
+		virtual void setShaders();
+		GLuint createProgram(const char ffile[],const char vfile[]);
+
+
 		/** A helper function that allows the camera position and orientation to be changed. 
 		 @param eyeX, eyeY, eyeZ - the vector describing the "eye" or camera position 
 		 @param centerX, centerY, centerZ - the vector describing the "object" that the eye is looking at

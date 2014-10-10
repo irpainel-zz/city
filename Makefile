@@ -10,10 +10,10 @@ SFRAMEWORK = src/framework/Camera.cpp src/framework/PerformanceTimer.cpp src/fra
 
 SMATH = src/math/Arcball.cpp 
 SWINDOW = src/window/Viewport.cpp
-SRENDER = src/render/Render.cpp
+SRENDER = src/render/Render.cpp src/render/Skybox.cpp
 SSTREETS = src/streets/Streets.cpp src/streets/Block.cpp src/streets/Building.cpp
 SMATH = src/math/Random.cpp
-SLOADER = src/loader/ImageLoader.cpp
+SLOADER = src/loader/ImageLoader.cpp src/loader/textfile.cpp
 
 
 SOURCES=main.cpp $(SRENDER) $(SMATH) $(SWINDOW) $(SSTREETS) $(SMATH) $(SLOADER) $(SFRAMEWORK)
@@ -23,7 +23,7 @@ EXECUTABLE=city
 all: $(SOURCES) $(EXECUTABLE)
 
 $(EXECUTABLE): $(OBJECTS) 
-	$(CC) -o $@ $^ -lm -lGL -lGLU -lglut -ljpeg -lm -lGLEW $(LPATH)
+	$(CC) -o $@ $^ -lGL -lGLU -lglut -ljpeg -lm -lGLEW $(LPATH)
 	
 .cpp.o: 
 	$(CC) $(CFLAGS) -c -o $@ $^ $(IPATH) $(HEADERS)

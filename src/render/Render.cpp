@@ -31,24 +31,36 @@ Render::Render() {
 	camera = new Camera();
 
 	fpsInfo = "FPS: 0";
+}
 
-	glEnable(GL_CULL_FACE);
+void Render::load()
+{
+	skybox = new Skybox();
+	streets = new Streets(1000, 1000);
+	streets->createMap();
+	glewInit();
 
+	if (glewIsSupported("GL_VERSION_2_0"))
+		printf("OpenGL 2.0 supported.\n");
+	else {
+		printf("OpenGL 2.0 not supported !\n");
+		exit(1);
+	}
+	setShaders();
 }
 
 Render::~Render() {
 	delete (streets);
+	delete (skybox);
+	delete (camera);
 }
 
 void Render::display(float dTime)
 {
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	std::ostringstream oss;
 	float textColor[3] = {1.0f, 1.0f, 1.0f};
-	if (streets == NULL)
-	{
-		streets = new Streets(1000, 1000);
-		streets->createMap();
-	}
+
 
 	frame++;
 	time=glutGet(GLUT_ELAPSED_TIME);
@@ -71,11 +83,16 @@ void Render::display(float dTime)
 	glutSetWindowTitle(fpsInfo.c_str());
 	glPushMatrix();
 		setCamera();
+		glUseProgram(cubemap);
+		skybox->drawBox();
+		glUseProgram(0);
+		glPushMatrix();
 		glScalef(0.05, 0.05, 0.05);
 		setupLights();
 		glColor3f(0.5,0.5,0.5);
 		streets->render();
 		Viewport::drawAxes(1);
+		glPopMatrix();
 
 	glPopMatrix();
 
@@ -199,25 +216,12 @@ void Render::setOrtho2D()
 
 void Render::setCamera()
 {
-	glEnable(GL_DEPTH_TEST);
-	glEnable(GL_LIGHTING);
-
-	glEnable(GL_LIGHT0);
-	glEnable(GL_COLOR_MATERIAL);
-	glColorMaterial(GL_FRONT, GL_AMBIENT_AND_DIFFUSE);
-	glShadeModel(GL_SMOOTH);
-
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
-
 	gluPerspective(G308_FOVY, (double) winWidth / (double) winHeight, G308_ZNEAR_3D, G308_ZFAR_3D);
-//	glMatrixMode(GL_MODELVIEW);
-//	glLoadIdentity();
+	glMatrixMode(GL_MODELVIEW);
+	glLoadIdentity();
 
-//
-//	gluLookAt(eyeVector.x, eyeVector.y, eyeVector.z,
-//			  centerVector.x, centerVector.y, centerVector.z,
-//			  upVector.x, upVector.y, upVector.z);
 	camera->Refresh();
 }
 
@@ -229,15 +233,34 @@ void Render::rotTh(int v)
 
 void Render::setupLights() {
 
-	float direction[] = { 1.0f, 1.0f, 1.0f, 0.0f };
-	float diffintensity[] = { 0.5f, 0.5f, 0.5f, 1.0f };
+	//ambient
 	float ambient[] = { 0.2f, 0.2f, 0.2f, 1.0f };
+	float diffuse[] = { 0.2f, 0.2f, 0.2f, 1.0f };
+	float specular[] ={ 0.2f, 0.2f, 0.2f, 1.0f };
+	float position[] = { 10.0f, 10.0f, 10.0f, 1.0f };
 
-	glLightfv(GL_LIGHT0, GL_POSITION, direction);
-	glLightfv(GL_LIGHT0, GL_DIFFUSE, diffintensity);
 	glLightfv(GL_LIGHT0, GL_AMBIENT, ambient);
+	glLightfv(GL_LIGHT0, GL_DIFFUSE, diffuse);
+	glLightfv(GL_LIGHT0, GL_SPECULAR, specular);
+	glLightfv(GL_LIGHT0, GL_POSITION, position);
 
+
+	glEnable(GL_LIGHTING);
 	glEnable(GL_LIGHT0);
+		glEnable(GL_DEPTH_TEST);
+		glEnable(GL_COLOR_MATERIAL);
 
 }
+
+void Render::setShaders()
+{
+
+//	phong = createProgram("shaders/phong.frag", "shaders/phong.vert");
+//	tex = createProgram("shaders/phong_tex.frag", "shaders/phong_tex.vert");
+//	bump = createProgram("shaders/phong_bump.frag", "shaders/phong_bump.vert");
+	cubemap = createProgram("shaders/skybox.frag", "shaders/skybox.vert");
+//	reflection = createProgram("shaders/phong_reflection.frag", "shaders/phong_reflection.vert");
+
+}
+
 

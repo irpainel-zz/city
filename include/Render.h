@@ -13,6 +13,7 @@
 #include "Viewport.h"
 #include "Streets.h"
 #include "Camera.h"
+#include "Skybox.h"
 
 using namespace glutFramework;
 
@@ -86,6 +87,9 @@ public:
 
 	void rotTh(int v);
 
+	void load();
+	void setShaders();
+
 private:
 
 	/*  Display view */
@@ -105,6 +109,10 @@ private:
 
 	Streets * streets;
 	Camera * camera;
+	Skybox * skybox;
+
+	//shader programs
+	GLuint phong, tex, cubemap;
 
 	void Timer(int value);
 };

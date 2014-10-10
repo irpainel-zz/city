@@ -53,7 +53,8 @@ namespace glutFramework {
 		
 		// Initialize GLUT
 		glutInit(&argc, argv);
-		glutInitDisplayMode(GLUT_DEPTH | GLUT_DOUBLE | GLUT_RGBA);
+//		glutInitDisplayMode(GLUT_DEPTH | GLUT_DOUBLE | GLUT_RGBA);
+		glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_ALPHA | GLUT_DEPTH);
 		glutInitWindowSize(WINDOW_WIDTH, WINDOW_HEIGHT);
 		glutCreateWindow(title.c_str()); 
 		
@@ -199,6 +200,70 @@ namespace glutFramework {
 
 	}
 	
+	void GlutFramework::setShaders()
+	{
+		// Subclass and override this method
+	}
+
+
+	GLuint GlutFramework::createProgram(const char ffile[],const char vfile[])
+	{
+
+		GLuint program;
+		GLuint v,f;
+		char *vs = NULL,*fs = NULL;
+
+		v = glCreateShader(GL_VERTEX_SHADER);
+		f = glCreateShader(GL_FRAGMENT_SHADER);
+
+		vs = textFileRead(vfile);
+		fs = textFileRead(ffile);
+
+		const char * ff = fs;
+		const char * vf = vs;
+
+		glShaderSource(v, 1, &vf,NULL);
+		glShaderSource(f, 1, &ff,NULL);
+
+		glCompileShader(v);
+		glCompileShader(f);
+
+		GLint status;
+		glGetShaderiv(v, GL_COMPILE_STATUS, &status);
+		if (status == GL_FALSE) {
+			int loglen;
+			char logbuffer[1000];
+			glGetShaderInfoLog(v, sizeof(logbuffer), &loglen, logbuffer);
+			fprintf(stderr, "Vertice Shader Compile Error:%d:\n%s", loglen, logbuffer);
+		}
+
+		glGetShaderiv(f, GL_COMPILE_STATUS, &status);
+		if (status == GL_FALSE) {
+			int loglen;
+			char logbuffer[1000];
+			glGetShaderInfoLog(f, sizeof(logbuffer), &loglen, logbuffer);
+			fprintf(stderr, "Fragment Shader Compile Error:%d:\n%s", loglen, logbuffer);
+		}
+
+		program = glCreateProgram();
+		glAttachShader(program,f);
+		glAttachShader(program,v);
+
+		glLinkProgram(program);
+
+		glGetProgramiv(program, GL_LINK_STATUS, &status);
+		if (status == GL_FALSE) {
+			int loglen;
+			char logbuffer[1000];
+			glGetProgramInfoLog(program, sizeof(logbuffer), &loglen, logbuffer);
+			fprintf(stderr, "OpenGL Program Linker Error:\n%.*s", logbuffer);
+		}
+		free(vs);
+		free(fs);
+		return program;
+
+	}
+
 	void GlutFramework::setLookAt(float eyeX, float eyeY, float eyeZ, 
 								  float centerX, float centerY, float centerZ, float upX, float upY, float upZ) {
 		
