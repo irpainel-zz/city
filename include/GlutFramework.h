@@ -40,11 +40,11 @@
 #ifdef __APPLE__
     #ifdef TARGET_OS_MAC
 		#include <GL/glew.h>
-        #include <GLUT/glut.h>
+    #include <GLUT/glut.h>
     #endif
 #elif WIN32
-	#include <windows.h> 
-	#include <GL/glut.h> 
+	#include <windows.h>
+	#include <GL/glut.h>
 #else
 	#include <GL/glew.h>
 	#include <GL/glut.h>

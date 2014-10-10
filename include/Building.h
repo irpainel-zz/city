@@ -14,6 +14,7 @@
 #include "GlutFramework.h"
 #include "Random.h"
 #include "glm/glm.hpp"
+#include <OpenGL/gl.h>
 
 class Building {
 public:
