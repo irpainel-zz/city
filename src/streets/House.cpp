@@ -1,23 +1,20 @@
 /*
- * Building.cpp
+ * House.cpp
  *
  *  Created on: Oct 11, 2014
  *      Author: Iury Roger Painelli
  */
 
-#include <Building.h>
+#include "House.h"
 
-Building::Building(float w, float l, float h) : Construction(w, l, h) {
-	// TODO Auto-generated constructor stub
+House::House(float w, float l, float h) : Construction(w, l, h) {
 
 }
 
-Building::~Building() {
-	// TODO Auto-generated destructor stub
+House::~House() {
 }
 
-
-void Building::generateConstruction()
+void House::generateConstruction()
 {
 	float r, g, b;
 	r = Random::generateRandom(0, 10)/10.f;

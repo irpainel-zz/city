@@ -1,7 +1,7 @@
 /*
  * Building.h
  *
- *  Created on: Oct 4, 2014
+ *  Created on: Oct 11, 2014
  *      Author: Iury Roger Painelli
  */
 
@@ -14,21 +14,14 @@
 #include "GlutFramework.h"
 #include "Random.h"
 #include "glm/glm.hpp"
+#include "Construction.h"
 
-class Building {
+class Building: public Construction {
 public:
 	Building(float w, float l, float h);
 	virtual ~Building();
 
-	void generateBuilding();
-	void drawBuilding();
-
-private:
-	float width;
-	float length;
-	float height;
-
-	GLuint buildingDL;
+	void generateConstruction();
 };
 
 #endif /* BUILDING_H_ */

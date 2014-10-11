@@ -11,7 +11,7 @@ SFRAMEWORK = src/framework/Camera.cpp src/framework/PerformanceTimer.cpp src/fra
 SMATH = src/math/Arcball.cpp 
 SWINDOW = src/window/Viewport.cpp
 SRENDER = src/render/Render.cpp src/render/Skybox.cpp
-SSTREETS = src/streets/Streets.cpp src/streets/Block.cpp src/streets/Building.cpp
+SSTREETS = src/streets/Streets.cpp src/streets/Block.cpp src/streets/Construction.cpp src/streets/Building.cpp src/streets/House.cpp
 SMATH = src/math/Random.cpp
 SLOADER = src/loader/ImageLoader.cpp src/loader/textfile.cpp
 

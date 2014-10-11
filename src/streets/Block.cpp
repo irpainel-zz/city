@@ -17,7 +17,7 @@ Block::Block(glm::vec3 s, glm::vec3 e, int centreDistance, int isPark) {
 	width = end.x - start.x;
 	length = end.z - start.z;
 
-	buildings.reserve(10);
+	constructions.reserve(10);
 
 }
 
@@ -49,18 +49,18 @@ int Block::generateBlock()
 		if (rand  > centreDistance)
 		{
 			newBuildingBlock();
-			compileBuildings();
+			compileConstructions();
 		}
 		else
 		{
 			newResidentialBlock();
-			compileBuildings();
+			compileConstructions();
 		}
 	}
 
 
 	check_gl_error();
-	return (int) buildings.size();
+	return (int) constructions.size();
 }
 
 void Block::compilePark()
@@ -71,7 +71,7 @@ void Block::compilePark()
 		drawBlockFloor();
 	glEndList();
 }
-void Block::compileBuildings()
+void Block::compileConstructions()
 {
 	unsigned int i;
 	coord c;
@@ -79,11 +79,11 @@ void Block::compileBuildings()
 	blockDL = glGenLists(1);
 	glNewList(blockDL, GL_COMPILE);
 		drawBlockFloor();
-		for (i = 0; i < buildings.size(); ++i) {
+		for (i = 0; i < constructions.size(); ++i) {
 			c = lotCoords[i];
 			glPushMatrix();
 				glTranslatef(c.start.x+c.width/2.f, 0.0, c.start.z+c.length/2.f);
-				buildings[i]->drawBuilding();
+				constructions[i]->drawConstruction();
 			glPopMatrix();
 		}
 	glEndList();
@@ -202,19 +202,19 @@ void Block::newBuildingBlock()
 
 void Block::newHouse(float width, float length)
 {
-	Building * tempBuilding;
+	Construction * tempConstruction;
 	float height;
 	//random 1 - 3
 	float stories = (Random::generateRandom(0, 3)+1);
 	height = 2.5 * stories;
-	tempBuilding = new Building(width, length, height);
-	tempBuilding->generateBuilding();
-	buildings.push_back(tempBuilding);
+	tempConstruction = new House(width, length, height);
+	tempConstruction->generateConstruction();
+	constructions.push_back(tempConstruction);
 }
 
 void Block::newBuilding(float width, float length)
 {
-	Building * tempBuilding;
+	Construction * tempConstruction;
 	float height;
 	//random 0 - 100;
 	float rand = (Random::generateRandom(0, 10)+1)*10;
@@ -232,9 +232,9 @@ void Block::newBuilding(float width, float length)
 		height = Random::generateRandom(1, 3)*10;
 	}
 
-	tempBuilding = new Building(width, length, height);
-	tempBuilding->generateBuilding();
-	buildings.push_back(tempBuilding);
+	tempConstruction = new Building(width, length, height);
+	tempConstruction->generateConstruction();
+	constructions.push_back(tempConstruction);
 }
 
 

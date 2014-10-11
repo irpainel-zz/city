@@ -230,7 +230,7 @@ void Render::setupLights() {
 	float ambient[] = { 0.2f, 0.2f, 0.2f, 1.0f };
 	float diffuse[] = { 0.2f, 0.2f, 0.2f, 1.0f };
 	float specular[] ={ 0.2f, 0.2f, 0.2f, 1.0f };
-	float position[] = { 10.0f, 10.0f, 10.0f, 1.0f };
+	float position[] = { 20.0f, 30.0f, 10.0f, 1.0f };
 
 	glLightfv(GL_LIGHT0, GL_AMBIENT, ambient);
 	glLightfv(GL_LIGHT0, GL_DIFFUSE, diffuse);

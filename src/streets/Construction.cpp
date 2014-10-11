@@ -1,23 +1,25 @@
 /*
- * Building.cpp
+ * Construction.cpp
  *
- *  Created on: Oct 11, 2014
+ *  Created on: Oct 4, 2014
  *      Author: Iury Roger Painelli
  */
 
-#include <Building.h>
+#include "Construction.h"
 
-Building::Building(float w, float l, float h) : Construction(w, l, h) {
-	// TODO Auto-generated constructor stub
+Construction::Construction(float w, float l, float h) {
+	this->width = w;
+	this->length = l;
+	this->height = h;
+	ConstructionDL = 0;
 
 }
 
-Building::~Building() {
-	// TODO Auto-generated destructor stub
+Construction::~Construction() {
+	glDeleteLists(ConstructionDL, 1);
 }
 
-
-void Building::generateConstruction()
+void Construction::generateConstruction()
 {
 	float r, g, b;
 	r = Random::generateRandom(0, 10)/10.f;
@@ -32,4 +34,9 @@ void Building::generateConstruction()
 			glutSolidCube(1);
 		glPopMatrix();
 	glEndList();
+}
+
+void Construction::drawConstruction()
+{
+	glCallList(ConstructionDL);
 }

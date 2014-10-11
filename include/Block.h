@@ -14,7 +14,9 @@
 #include "GlutFramework.h"
 #include "Random.h"
 #include "glm/glm.hpp"
+#include "Construction.h"
 #include "Building.h"
+#include "House.h"
 #include "GLerror.h"
 
 typedef struct coord {
@@ -44,7 +46,7 @@ private:
 	int isPark;
 	GLuint blockDL;
 
-	vector<Building *> buildings;
+	vector<Construction *> constructions;
 	//coords for each lot
 	vector<coord> lotCoords;
 
@@ -58,7 +60,7 @@ private:
 	void newHouse(float width, float length);
 
 	//compile display list
-	void compileBuildings();
+	void compileConstructions();
 	void compilePark();
 	void drawBlockFloor();
 
