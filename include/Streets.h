@@ -17,6 +17,7 @@
 #include "glm/glm.hpp"
 #include "GLerror.h"
 #include "ImageLoader.h"
+#include "textures.h"
 
 using namespace std;
 
@@ -47,6 +48,8 @@ private:
 	GLuint cornerDL;
 	GLuint deadEndCrossDL;
 
+	textures gTextures;
+
 
 	std::map<std::string, int> blockIndex;
 
@@ -65,6 +68,8 @@ private:
 	void drawCityFloor();
 	void createStreetGeometry();
 	void defineCityCentre();
+
+	void loadTextures();
 
 	std::string concat(glm::vec3);
 	void insertIndex(glm::vec3, int);

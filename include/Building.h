@@ -15,10 +15,11 @@
 #include "Random.h"
 #include "glm/glm.hpp"
 #include "Construction.h"
+#include "textures.h"
 
 class Building: public Construction {
 public:
-	Building(float w, float l, float h);
+	Building(float w, float l, float h, textures t);
 	virtual ~Building();
 
 	void generateConstruction();

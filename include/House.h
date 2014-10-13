@@ -16,10 +16,11 @@
 #include "GlutFramework.h"
 #include "Random.h"
 #include "glm/glm.hpp"
+#include "textures.h"
 
 class House: public Construction {
 public:
-	House(float w, float l, float h);
+	House(float w, float l, float h, textures t);
 	virtual ~House();
 
 	void generateConstruction();
@@ -33,6 +34,13 @@ private:
 
 	int nStories;
 	float storyHeight;
+
+
+	//textures
+	GLuint texWindow;
+	GLuint texDoor;
+	GLuint texWall;
+	GLuint texRoof;
 
 	//vertex arrays
 

@@ -18,6 +18,7 @@
 #include "Building.h"
 #include "House.h"
 #include "GLerror.h"
+#include "textures.h"
 
 typedef struct coord {
 	glm::vec3 start;
@@ -28,7 +29,7 @@ typedef struct coord {
 
 class Block {
 public:
-	Block(glm::vec3 s, glm::vec3 e, int centreDistance, int isPark);
+	Block(glm::vec3 s, glm::vec3 e, int centreDistance, int isPark, textures t);
 	virtual ~Block();
 	glm::vec3 getStart();
 	glm::vec3 getEnd();
@@ -49,6 +50,9 @@ private:
 	vector<Construction *> constructions;
 	//coords for each lot
 	vector<coord> lotCoords;
+
+	//textures
+	textures gTextures;
 
 
 	//methods

@@ -36,7 +36,7 @@ Render::Render() {
 void Render::load()
 {
 	skybox = new Skybox();
-	streets = new Streets(500, 500);
+	streets = new Streets(1000, 1000);
 	streets->createMap();
 	glewInit();
 
@@ -81,8 +81,7 @@ void Render::display(float dTime)
 		glPushMatrix();
 		glScalef(0.05, 0.05, 0.05);
 		setupLights();
-		glColor3f(0.5,0.5,0.5);
-		glUseProgram(phong);
+		glUseProgram(tex);
 		streets->render();
 		glUseProgram(0);
 		glPopMatrix();
@@ -227,9 +226,9 @@ void Render::rotTh(int v)
 void Render::setupLights() {
 
 	//ambient
-	float ambient[] = { 0.2f, 0.2f, 0.2f, 1.0f };
-	float diffuse[] = { 0.2f, 0.2f, 0.2f, 1.0f };
-	float specular[] ={ 0.2f, 0.2f, 0.2f, 1.0f };
+	float ambient[] = { 1.0f, 1.0f, 1.0f, 1.0f };
+	float diffuse[] = { 0.5f, 0.5f, 0.5f, 1.0f };
+	float specular[] ={ 1.0f, 1.0f, 1.0f, 1.0f };
 	float position[] = { 20.0f, 30.0f, 10.0f, 1.0f };
 
 	glLightfv(GL_LIGHT0, GL_AMBIENT, ambient);
@@ -241,7 +240,7 @@ void Render::setupLights() {
 	glEnable(GL_LIGHTING);
 	glEnable(GL_LIGHT0);
 		glEnable(GL_DEPTH_TEST);
-		glEnable(GL_COLOR_MATERIAL);
+//		glEnable(GL_COLOR_MATERIAL);
 
 }
 

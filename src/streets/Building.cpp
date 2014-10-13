@@ -7,7 +7,7 @@
 
 #include <Building.h>
 
-Building::Building(float w, float l, float h) : Construction(w, l, h) {
+Building::Building(float w, float l, float h, textures t) : Construction(w, l, h, t) {
 	// TODO Auto-generated constructor stub
 
 }

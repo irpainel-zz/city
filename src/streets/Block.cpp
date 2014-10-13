@@ -7,7 +7,7 @@
 
 #include "Block.h"
 
-Block::Block(glm::vec3 s, glm::vec3 e, int centreDistance, int isPark) {
+Block::Block(glm::vec3 s, glm::vec3 e, int centreDistance, int isPark, textures t) {
 	start = s;
 	end = e;
 	intersections = 0;
@@ -18,6 +18,8 @@ Block::Block(glm::vec3 s, glm::vec3 e, int centreDistance, int isPark) {
 	length = end.z - start.z;
 
 	constructions.reserve(10);
+
+	gTextures = t;
 
 }
 
@@ -91,13 +93,39 @@ void Block::compileConstructions()
 
 void Block::drawBlockFloor()
 {
-	glColor3f(0.0f, 1.0f, 0.0f);
+	glPushMatrix();
+
+	glm::vec4 ambient = glm::vec4(0.6f, 0.6f, 0.6f, 1.0f);
+	glm::vec4 diffuse = glm::vec4(0.2f, 0.2f, 0.2f, 1.0f);
+	glm::vec4 specular = glm::vec4(0.f, 0.0f, 0.0f, 1.f);
+	float shininess = 1;
+
+	glMaterialfv(GL_FRONT, GL_AMBIENT, &ambient[0]);
+	glMaterialfv(GL_FRONT, GL_DIFFUSE, &diffuse[0]);
+	glMaterialfv(GL_FRONT, GL_SPECULAR, &specular[0]);
+	glMaterialf(GL_FRONT, GL_SHININESS, shininess);
+	glEnable(GL_TEXTURE_2D);
+	glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
+	glBindTexture(GL_TEXTURE_2D, gTextures.grass[(Random::generateRandom(0, gTextures.grass.size()))]);
+
 	glBegin(GL_QUADS);
-		glVertex3f(0.f , 0.f, 0.f);
-		glVertex3f(width, 0.f, 0.f);
-		glVertex3f(width, 0.f, length);
-		glVertex3f(0.f, 0.f, length);
+		glNormal3f(0.f, 1.f, 0.f); glTexCoord2f(0.f, 0.f); glVertex3f(0.f , 0.f, 0.f);
+		glNormal3f(0.f, 1.f, 0.f); glTexCoord2f(20.f, 0.f); glVertex3f(width, 0.f, 0.f);
+		glNormal3f(0.f, 1.f, 0.f); glTexCoord2f(20.f, 20.f); glVertex3f(width, 0.f, length);
+		glNormal3f(0.f, 1.f, 0.f); glTexCoord2f(0.f, 20.f); glVertex3f(0.f, 0.f, length);
 	glEnd();
+	glDisable(GL_TEXTURE_2D);
+	glBindTexture(GL_TEXTURE_2D, 0);
+
+	ambient = glm::vec4(0.8f, 0.8f, 0.8f, 1.f);
+	diffuse = glm::vec4(0.2f, 0.2f, 0.2f, 1.0f);
+	specular = glm::vec4(0.f, 0.f, 0.f, 1.f);
+	shininess = 20;
+	glMaterialfv(GL_FRONT, GL_AMBIENT, &ambient[0]);
+	glMaterialfv(GL_FRONT, GL_DIFFUSE, &diffuse[0]);
+	glMaterialfv(GL_FRONT, GL_SPECULAR, &specular[0]);
+	glMaterialf(GL_FRONT, GL_SHININESS, shininess);
+	glPopMatrix();
 }
 void Block::newResidentialBlock()
 {
@@ -207,7 +235,7 @@ void Block::newHouse(float width, float length)
 	//random 1 - 3
 	float stories = (Random::generateRandom(0, 3)+1);
 	height = 2.5 * stories;
-	tempConstruction = new House(width, length, height);
+	tempConstruction = new House(width, length, height, gTextures);
 	tempConstruction->generateConstruction();
 	constructions.push_back(tempConstruction);
 }
@@ -232,7 +260,7 @@ void Block::newBuilding(float width, float length)
 		height = Random::generateRandom(1, 3)*10;
 	}
 
-	tempConstruction = new Building(width, length, height);
+	tempConstruction = new Building(width, length, height, gTextures);
 	tempConstruction->generateConstruction();
 	constructions.push_back(tempConstruction);
 }

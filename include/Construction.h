@@ -14,10 +14,11 @@
 #include "GlutFramework.h"
 #include "Random.h"
 #include "glm/glm.hpp"
+#include "textures.h"
 
 class Construction {
 public:
-	Construction(float w, float l, float h);
+	Construction(float w, float l, float h, textures t);
 	virtual ~Construction();
 
 	virtual void generateConstruction();
@@ -27,6 +28,9 @@ protected:
 	float width;
 	float length;
 	float height;
+
+	//textures
+	textures gTextures;
 
 	GLuint ConstructionDL;
 };

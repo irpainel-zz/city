@@ -34,6 +34,13 @@ Streets::Streets(int w, int l) {
 	distanceZeroToCentre = glm::distance(cityCentre, glm::vec3(0.f, 0.f, 0.f));
 	relation = 100.f/distanceZeroToCentre;
 
+	//textures
+	gTextures.grass.reserve(20);
+	gTextures.window.reserve(20);
+	gTextures.door.reserve(20);
+	gTextures.wall.reserve(20);
+	gTextures.roof.reserve(20);
+
 
 }
 
@@ -345,37 +352,44 @@ void Streets::createStreetGeometry()
 	GLuint crossTexture;
 	GLuint texture = ImageLoader::readTexture("assets/textures/road/street1.jpg");
 
+
+
+	glm::vec4 ambient = glm::vec4(0.8f, 0.8f, 0.8f, 1.f);
+	glm::vec4 diffuse = glm::vec4(0.2f, 0.2f, 0.2f, 1.0f);
+	glm::vec4 specular = glm::vec4(0.f, 0.f, 0.f, 1.f);
+	float shininess = 20;
+
+	glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, &ambient[0]);
+	glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, &diffuse[0]);
+	glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, &specular[0]);
+	glMaterialf(GL_FRONT_AND_BACK, GL_SHININESS, shininess);
+	glEnable(GL_TEXTURE_2D);
 	streetSegmentLeftDL = glGenLists(1);
 	glNewList(streetSegmentLeftDL, GL_COMPILE);
-	glEnable(GL_TEXTURE_2D);
+
 
 	glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
 	glBindTexture(GL_TEXTURE_2D, texture);
-	glColor3f(1.0, 1.0, 1.0);
 		glBegin(GL_QUADS);
 			glNormal3f(0.f, 1.f, 0.f); glTexCoord2f(0.f, 0.f); glVertex3f(-segWidth, 0.01, 0.0);
 			glNormal3f(0.f, 1.f, 0.f); glTexCoord2f(0.5f, 0.f); glVertex3f(0.0, 0.01, 0.0);
 			glNormal3f(0.f, 1.f, 0.f); glTexCoord2f(0.5f, 1.f); glVertex3f(0.0, 0.01, segLength);
 			glNormal3f(0.f, 1.f, 0.f); glTexCoord2f(0.f, 1.f); glVertex3f(-segWidth, 0.01, segLength);
 		glEnd();
-	glDisable(GL_TEXTURE_2D);
 	glBindTexture(GL_TEXTURE_2D, 0);
 	glEndList();
 
 	streetSegmentRightDL = glGenLists(1);
 	glNewList(streetSegmentRightDL, GL_COMPILE);
-	glEnable(GL_TEXTURE_2D);
 
 	glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
 	glBindTexture(GL_TEXTURE_2D, texture);
-	glColor3f(1.0, 1.0, 1.0);
 		glBegin(GL_QUADS);
 			glNormal3f(0.f, 1.f, 0.f); glTexCoord2f(0.5f, 0.f); glVertex3f(0.0, 0.01, 0.0);
 			glNormal3f(0.f, 1.f, 0.f); glTexCoord2f(1.f, 0.f); glVertex3f(segWidth, 0.01, 0.0);
 			glNormal3f(0.f, 1.f, 0.f); glTexCoord2f(1.f, 1.f); glVertex3f(segWidth, 0.01, segLength);
 			glNormal3f(0.f, 1.f, 0.f); glTexCoord2f(0.5f, 1.f); glVertex3f(0.0, 0.01, segLength);
 		glEnd();
-	glDisable(GL_TEXTURE_2D);
 	glBindTexture(GL_TEXTURE_2D, 0);
 	glEndList();
 
@@ -385,37 +399,31 @@ void Streets::createStreetGeometry()
 	deadEndCrossDL = glGenLists(1);
 	size = segWidth;
 	glNewList(deadEndCrossDL, GL_COMPILE);
-	glEnable(GL_TEXTURE_2D);
 	glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
 	glBindTexture(GL_TEXTURE_2D, crossTexture);
-	glColor3f(1.0, 1.0, 1.0);
 		glBegin(GL_QUADS);
 			glNormal3f(0.f, 1.f, 0.f); glTexCoord2f(0.f, 0.5f); glVertex3f(0.0, 0.01, 0.0);
 			glNormal3f(0.f, 1.f, 0.f); glTexCoord2f(1.f,  0.5f); glVertex3f(size*2.f, 0.01, 0.0);
 			glNormal3f(0.f, 1.f, 0.f); glTexCoord2f(1.f,  1.f); glVertex3f(size*2.f, 0.01, size);
 			glNormal3f(0.f, 1.f, 0.f); glTexCoord2f(0.f, 1.f); glVertex3f(0.0, 0.01, size);
 		glEnd();
-	glDisable(GL_TEXTURE_2D);
 	glBindTexture(GL_TEXTURE_2D, 0);
 	glEndList();
 
 	cornerDL = glGenLists(1);
 	size = segWidth;
 	glNewList(cornerDL, GL_COMPILE);
-	glEnable(GL_TEXTURE_2D);
 	glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
 	glBindTexture(GL_TEXTURE_2D, crossTexture);
-	glColor3f(1.0, 1.0, 1.0);
 		glBegin(GL_QUADS);
 			glNormal3f(0.f, 1.f, 0.f); glTexCoord2f(0.f, 0.f); glVertex3f(-size/2.f, 0.01, -size/2.f);
 			glNormal3f(0.f, 1.f, 0.f); glTexCoord2f(0.5f, 0.f); glVertex3f(size/2.f, 0.01, -size/2.f);
 			glNormal3f(0.f, 1.f, 0.f); glTexCoord2f(0.5f, 0.5f); glVertex3f(size/2.f, 0.01, size/2.f);
 			glNormal3f(0.f, 1.f, 0.f); glTexCoord2f(0.f, 0.5f); glVertex3f(-size/2.f, 0.01, size/2.f);
 		glEnd();
-	glDisable(GL_TEXTURE_2D);
 	glBindTexture(GL_TEXTURE_2D, 0);
 	glEndList();
-
+	glDisable(GL_TEXTURE_2D);
 
 }
 
@@ -452,6 +460,10 @@ void Streets::createBlocks()
 	int xCoord, zCoord;
 
 	numBlock = 0;
+
+	//load textures for the blocks
+	loadTextures();
+
 	while(rowZ < cityLength)
 	{
 		while (rowX < cityWidth)
@@ -498,7 +510,7 @@ void Streets::createBlocks()
 				//scale distance from centre to a scale from 1 to 100;
 				int distanceToScale = (int) (relation * distanceFromCentre);
 				//printf ("(%f, %f) dist %d\n", tempStart.x, tempStart.z, relationCentreBlock);
-				tempBlock = new Block(tempStart, tempEnd, distanceToScale, isPark);
+				tempBlock = new Block(tempStart, tempEnd, distanceToScale, isPark, gTextures);
 
 				numBuildings += tempBlock->generateBlock();
 				blocks.push_back(tempBlock);
@@ -536,6 +548,55 @@ int Streets::isBlockOcuppied(glm::vec3 t)
 		return 1;
 	else
 		return 0;
+}
+
+void Streets::loadTextures()
+{
+	GLuint tempTex;
+	int i;
+	char file[250];
+
+	//grass
+	for (i = 0; i < 3; ++i) {
+		sprintf(file, "assets/textures/grass/%d.jpg", i+1);
+		cout << "Loading texture: "<< file << endl;
+		tempTex = ImageLoader::readTexture(file);
+		gTextures.grass.push_back(tempTex);
+	}
+
+	//windows
+	for (i = 0; i < 16; ++i) {
+		sprintf(file, "assets/textures/window/%d.jpg", i+1);
+		cout << "Loading texture: "<< file << endl;
+		tempTex = ImageLoader::readTexture(file);
+		gTextures.window.push_back(tempTex);
+	}
+
+	//doors
+	for (i = 0; i < 7; ++i) {
+		sprintf(file, "assets/textures/door/%d.jpg", i+1);
+		cout << "Loading texture: "<< file << endl;
+		tempTex = ImageLoader::readTexture(file);
+		gTextures.door.push_back(tempTex);
+	}
+
+	//walls
+	for (i = 0; i < 12; ++i) {
+		sprintf(file, "assets/textures/wall/%d.jpg", i+1);
+		cout << "Loading texture: "<< file << endl;
+		tempTex = ImageLoader::readTexture(file);
+		gTextures.wall.push_back(tempTex);
+	}
+
+	//roof
+	for (i = 0; i < 8; ++i) {
+		sprintf(file, "assets/textures/roof/%d.jpg", i+1);
+		cout << "Loading texture: "<< file << endl;
+		tempTex = ImageLoader::readTexture(file);
+		gTextures.roof.push_back(tempTex);
+	}
+
+
 }
 
 std::string Streets::concat(glm::vec3 t)

@@ -7,11 +7,12 @@
 
 #include "Construction.h"
 
-Construction::Construction(float w, float l, float h) {
+Construction::Construction(float w, float l, float h, textures t) {
 	this->width = w;
 	this->length = l;
 	this->height = h;
 	ConstructionDL = 0;
+	gTextures = t;
 
 }
 
