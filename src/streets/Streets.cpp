@@ -40,7 +40,7 @@ Streets::Streets(int w, int l) {
 	gTextures.door.reserve(20);
 	gTextures.wall.reserve(20);
 	gTextures.roof.reserve(20);
-
+	gTextures.building.reserve(20);
 
 }
 
@@ -594,6 +594,14 @@ void Streets::loadTextures()
 		cout << "Loading texture: "<< file << endl;
 		tempTex = ImageLoader::readTexture(file);
 		gTextures.roof.push_back(tempTex);
+	}
+
+	//building
+	for (i = 0; i < 15; ++i) {
+		sprintf(file, "assets/textures/building/%d.jpg", i+1);
+		cout << "Loading texture: "<< file << endl;
+		tempTex = ImageLoader::readTexture(file);
+		gTextures.building.push_back(tempTex);
 	}
 
 
