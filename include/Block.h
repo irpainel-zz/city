@@ -64,9 +64,9 @@ private:
 	void newHouse(float width, float length);
 
 	//compile display list
-	void compileConstructions();
+	void compileConstructions(GLuint floorTexture);
 	void compilePark();
-	void drawBlockFloor();
+	void drawBlockFloor(GLuint texture);
 
 };
 

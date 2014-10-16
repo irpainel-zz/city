@@ -617,6 +617,14 @@ void Streets::loadTextures()
 		gTextures.building_roof.push_back(tempTex);
 	}
 
+	//concrete
+	cout << "Loading concrete texture" << endl;
+	for (i = 0; i < 6; i++) {
+		sprintf(file, "assets/textures/concrete/%d.jpg", i+1);
+		tempTex = ImageLoader::readTexture(file);
+		gTextures.concrete.push_back(tempTex);
+	}
+
 }
 
 std::string Streets::concat(glm::vec3 t)

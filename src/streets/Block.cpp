@@ -41,6 +41,7 @@ glm::vec3 Block::getEnd()
 int Block::generateBlock()
 {
 	float rand = (Random::generateRandom(0, 10)+1)*10;
+	GLuint floorTexture;
 
 	if (isPark)
 	{
@@ -51,12 +52,14 @@ int Block::generateBlock()
 		if (rand  > centreDistance)
 		{
 			newBuildingBlock();
-			compileConstructions();
+			floorTexture = gTextures.concrete[(Random::generateRandom(0, gTextures.concrete.size()))];
+			compileConstructions(floorTexture);
 		}
 		else
 		{
 			newResidentialBlock();
-			compileConstructions();
+			floorTexture = gTextures.grass[(Random::generateRandom(0, gTextures.grass.size()))];
+			compileConstructions(floorTexture);
 		}
 	}
 
@@ -67,20 +70,20 @@ int Block::generateBlock()
 
 void Block::compilePark()
 {
-
+	GLuint floorTexture = gTextures.grass[(Random::generateRandom(0, gTextures.grass.size()))];
 	blockDL = glGenLists(1);
 	glNewList(blockDL, GL_COMPILE);
-		drawBlockFloor();
+		drawBlockFloor(floorTexture);
 	glEndList();
 }
-void Block::compileConstructions()
+void Block::compileConstructions(GLuint floorTexture)
 {
 	unsigned int i;
 	coord c;
 
 	blockDL = glGenLists(1);
 	glNewList(blockDL, GL_COMPILE);
-		drawBlockFloor();
+		drawBlockFloor(floorTexture);
 		for (i = 0; i < constructions.size(); ++i) {
 			c = lotCoords[i];
 			glPushMatrix();
@@ -91,7 +94,7 @@ void Block::compileConstructions()
 	glEndList();
 }
 
-void Block::drawBlockFloor()
+void Block::drawBlockFloor(GLuint texture)
 {
 	glPushMatrix();
 
@@ -106,7 +109,7 @@ void Block::drawBlockFloor()
 	glMaterialf(GL_FRONT, GL_SHININESS, shininess);
 	glEnable(GL_TEXTURE_2D);
 	glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
-	glBindTexture(GL_TEXTURE_2D, gTextures.grass[(Random::generateRandom(0, gTextures.grass.size()))]);
+	glBindTexture(GL_TEXTURE_2D, texture);
 
 	glBegin(GL_QUADS);
 		glNormal3f(0.f, 1.f, 0.f); glTexCoord2f(0.f, 0.f); glVertex3f(0.f , 0.f, 0.f);
