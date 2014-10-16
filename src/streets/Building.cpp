@@ -13,7 +13,6 @@ Building::Building(float w, float l, float h, textures t) : Construction(w, l, h
 	num_stories = h / storeyHeight;
 	texBuilding = gTextures.building[Random::generateRandom(0, gTextures.building.size())];
 	texRoof = gTextures.building_roof[Random::generateRandom(0, gTextures.building_roof.size())];
-
 }
 
 Building::~Building() {
@@ -52,14 +51,14 @@ void Building::generateConstruction()
 
 void Building::drawBuilding(bool firstStorey) {
 	glPushMatrix();
-		glScalef((width)/2, 1.f, (length)/2);
+		glScalef((width), 1.f, (length));
 		drawWallTex();
 	glPopMatrix();
 }
 
 void Building::drawWallTex() {
-	int angle = 1;
-	float wsize = 0.5;
+	int angle = 0;
+	float wsize = 0.25;
 
 	glm::vec4 ambient = glm::vec4(0.8f, 0.8f, 0.8f, 1.0f);
 	glm::vec4 diffuse = glm::vec4(0.2f, 0.2f, 0.2f, 1.0f);

@@ -248,13 +248,13 @@ void Block::newBuilding(float width, float length)
 	{
 		rand = (Random::generateRandom(0, 10)+1);
 		if (rand < 6)
-			height = Random::generateRandom(4, 10)*10+1;
+			height = (Random::generateRandom(4, 10)+1)*10;
 		else
-			height = Random::generateRandom(0, 3)*10+1;
+			height = (Random::generateRandom(0, 3)+1)*10;
 	}
 	else
 	{
-		height = Random::generateRandom(1, 3)*10;
+		height = (Random::generateRandom(1, 3)+1)*10;
 	}
 
 
