@@ -12,6 +12,7 @@ Building::Building(float w, float l, float h, textures t) : Construction(w, l, h
 	storeyHeight = 2.5;
 	num_stories = h / storeyHeight;
 	texBuilding = gTextures.building[Random::generateRandom(0, gTextures.building.size())];
+	texRoof = gTextures.building_roof[Random::generateRandom(0, gTextures.building_roof.size())];
 
 }
 
@@ -37,6 +38,7 @@ void Building::generateConstruction()
 
 		glPushMatrix();
 			glTranslatef(0.0, storeyHeight * num_stories, 0.0);
+			glScalef((width), 1.0, (length));
 			drawRoofs();
 		glPopMatrix();
 //		glColor3f(r, g, b);
@@ -92,5 +94,20 @@ void Building::drawWallTex() {
 }
 
 void Building::drawRoofs() {
-	float rsize = 0.5
+	float rsize = 0.25;
+	glEnable(GL_TEXTURE_2D);
+	glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
+	glBindTexture(GL_TEXTURE_2D, texRoof);
+
+	glPushMatrix();
+		glBegin(GL_QUADS);
+			glNormal3f(0.0, 0.0, -1.0);
+			glTexCoord2f(0.0, 0.0); glVertex3f(-rsize, 0.0, -rsize);
+			glTexCoord2f(1.0, 0.0); glVertex3f(rsize, 0.0, -rsize);
+			glTexCoord2f(1.0, 1.0); glVertex3f(rsize, 0.0, rsize);
+			glTexCoord2f(0.0, 1.0); glVertex3f(-rsize, 0.0, rsize);
+		glEnd();
+	glPopMatrix();
+	glDisable(GL_TEXTURE_2D);
+	glBindTexture(GL_TEXTURE_2D, 0);
 }

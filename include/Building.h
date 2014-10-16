@@ -29,6 +29,7 @@ private:
 	int num_stories;
 
 	GLuint texBuilding;
+	GLuint texRoof;
 
 	void drawBuilding(bool firstStorey);
 	void drawWallTex();
