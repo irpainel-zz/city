@@ -36,7 +36,7 @@ Render::Render() {
 void Render::load()
 {
 	skybox = new Skybox();
-	streets = new Streets(1000, 1000);
+	streets = new Streets(500, 500);
 	streets->createMap();
 	glewInit();
 
