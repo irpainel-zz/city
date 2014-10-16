@@ -129,8 +129,6 @@ void Block::drawBlockFloor()
 }
 void Block::newResidentialBlock()
 {
-	vector<float> x;
-	vector<float> z;
 	float startX = 2.5;
 	float startZ = 2.5;
 	float endX = 2.5;
@@ -139,20 +137,13 @@ void Block::newResidentialBlock()
 	unsigned int i;
 	unsigned int j;
 
-	cout << " new block" << endl;
-	//insert coord 0 in x
-//	x.push_back(startX);
-	//insert coord 0 in z
-//	z.push_back(startZ);
 	while (startX < width)
 	{
-//		cout << " new" << endl;
 		rand = Random::generateRandom(2, 3);
 		if (endX+rand*10 > (width - 20))
 			endX = width;
 		else
 			endX += rand*10;
-//		printf("sX %f, eX %f \n", startX, endX);
 		while (startZ < length)
 		{
 
@@ -167,9 +158,6 @@ void Block::newResidentialBlock()
 			else
 				endZ += rand*10;
 
-//			printf("sX %f, sZ %f, eX %f eZ %f, W %f, L %f \n", startX, startZ, endX, endZ, width, length);
-//			z.push_back(startZ);
-//			x.push_back(startX);
 			tempCoord.end.x = endX;
 			tempCoord.end.y = 0.0;
 			tempCoord.end.z = startZ;
@@ -182,44 +170,6 @@ void Block::newResidentialBlock()
 		endZ = startZ = 2.5;
 		startX = endX;
 	}
-
-//	//insert coord 0 in x
-//	x.push_back(sumX);
-//	float sizeLot = width / 2;
-//	sumX = sizeLot;
-//	while (sumX <= width)
-//	{
-//		x.push_back(sumX);
-//		sumX += sizeLot;
-//
-//	}
-
-//	//insert coord 0 in z
-//	z.push_back(sumZ);
-//	rand = length / 5;
-//	sumZ = rand;
-//	while (sumZ <= length)
-//	{
-//		z.push_back(sumZ);
-//		sumZ+=rand;
-//	}
-
-//	for (i = 0; i < x.size()-1; i++)
-//	{
-//		for (j = 0; j < z.size()-1; ++j) {
-//			coord tempCoord;
-//			tempCoord.start.x = x[i];
-//			tempCoord.start.y = 0.0;
-//			tempCoord.start.z = z[j];
-//			tempCoord.end.x = x[i+1];
-//			tempCoord.end.y = 0.0;
-//			tempCoord.end.z = z[j+1];
-//			tempCoord.width = (x[i+1] - x[i]) - 2.0;
-//			tempCoord.length = (z[j+1] - z[j]) - 2.0;
-//			lotCoords.push_back(tempCoord);
-//			newHouse(tempCoord.width, tempCoord.length);
-//		}
-//	}
 }
 
 void Block::newBuildingBlock()
