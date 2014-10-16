@@ -21,6 +21,7 @@ typedef struct textures {
 	vector<GLuint> wall;
 	vector<GLuint> roof;
 	vector<GLuint> building;
+	vector<GLuint> building_roof;
 }tex;
 
 
