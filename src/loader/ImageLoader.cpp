@@ -117,8 +117,8 @@ GLuint ImageLoader::readTexture(char* filename) {
 
 
 
-	//glGenerateMipmap(GL_TEXTURE_2D);
-	//printf("version %s", glGetString(GL_VERSION));
+//	glGenerateMipmap(GL_TEXTURE_2D);
+//	printf("version %s", glGetString(GL_VERSION));
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);

@@ -7,7 +7,7 @@
 
 #include "House.h"
 
-House::House(float w, float l, float h, textures t) : Construction(w, l, h, t) {
+House::House(float w, float l, float h, textures t) : Construction(w-5.f, l-1.f, h, t) {
 	storyHeight = 2.5f;
 	nStories = floor(h / storyHeight);
 	texWindow = gTextures.window[(Random::generateRandom(0, gTextures.window.size()))];
@@ -35,7 +35,7 @@ void House::generateConstruction()
 		}
 		glPushMatrix();
 			glTranslatef(0.f, height, 0.f);
-			glScalef((width)/2, height, (length)/2);
+			glScalef((width), height, (length));
 			glRotatef(90, 0.f, 1.f, 0.f);
 			drawRoof();
 		glPopMatrix();
@@ -45,17 +45,17 @@ void House::generateConstruction()
 void House::drawFloor(bool isFirst)
 {
 	glPushMatrix();
-		glScalef((width)/2, 1.f, (length)/2);
+		glScalef((width), 1.f, (length));
 		drawWalls();
 	glPopMatrix();
 	glPushMatrix();
-		glTranslatef(width/4.f, 0.f, 0.f);
+		glTranslatef(width/2.f, 0.f, 0.f);
 		glPushMatrix();
-			glTranslatef(0.f, 0.f, length/8.f);
+			glTranslatef(0.f, 0.f, length/4.f);
 			drawWindow();
 		glPopMatrix();
 		glPushMatrix();
-			glTranslatef(0.f, 0.f, -length/8.f);
+			glTranslatef(0.f, 0.f, -length/4.f);
 			drawWindow();
 		glPopMatrix();
 		if (isFirst)
@@ -63,41 +63,41 @@ void House::drawFloor(bool isFirst)
 	glPopMatrix();
 	glPushMatrix();
 		glRotatef(180, 0.f, 1.f, 0.f);
-		glTranslatef(width/4.f, 0.f, 0.f);
+		glTranslatef(width/2.f, 0.f, 0.f);
 		glPushMatrix();
-			glTranslatef(0.f, 0.f, length/8.f);
+			glTranslatef(0.f, 0.f, length/4.f);
 			drawWindow();
 		glPopMatrix();
 		glPushMatrix();
-			glTranslatef(0.f, 0.f, -length/8.f);
+			glTranslatef(0.f, 0.f, -length/4.f);
 			drawWindow();
 		glPopMatrix();
 		if (isFirst)
 			drawDoor();
 	glPopMatrix();
 	glPushMatrix();
-		glTranslatef(0.f, 0.f, length/4.f);
+		glTranslatef(0.f, 0.f, length/2.f);
 		glPushMatrix();
-			glTranslatef(width/8.f, 0.f, 0.f);
+			glTranslatef(width/4.f, 0.f, 0.f);
 			glRotatef(270, 0.f, 1.f, 0.f);
 			drawWindow();
 		glPopMatrix();
 		glPushMatrix();
-			glTranslatef(-width/8.f, 0.f, 0.f);
+			glTranslatef(-width/4.f, 0.f, 0.f);
 			glRotatef(270, 0.f, 1.f, 0.f);
 			drawWindow();
 		glPopMatrix();
 	glPopMatrix();
 	glPushMatrix();
 		glRotatef(180, 0.f, 1.f, 0.f);
-		glTranslatef(0.f, 0.f, length/4.f);
+		glTranslatef(0.f, 0.f, length/2.f);
 		glPushMatrix();
-			glTranslatef(width/8.f, 0.f, 0.f);
+			glTranslatef(width/4.f, 0.f, 0.f);
 			glRotatef(270, 0.f, 1.f, 0.f);
 			drawWindow();
 		glPopMatrix();
 		glPushMatrix();
-			glTranslatef(-width/8.f, 0.f, 0.f);
+			glTranslatef(-width/4.f, 0.f, 0.f);
 			glRotatef(270, 0.f, 1.f, 0.f);
 			drawWindow();
 		glPopMatrix();
