@@ -23,6 +23,15 @@ public:
 	virtual ~Building();
 
 	void generateConstruction();
+
+private:
+	float storeyHeight;
+	int num_stories;
+
+	GLuint texBuilding;
+
+	void drawBuilding(bool firstStorey);
+	void drawWallTex();
 };
 
 #endif /* BUILDING_H_ */
