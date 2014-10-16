@@ -32,6 +32,7 @@ private:
 
 	void drawBuilding(bool firstStorey);
 	void drawWallTex();
+	void drawRoofs();
 };
 
 #endif /* BUILDING_H_ */

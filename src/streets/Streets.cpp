@@ -612,7 +612,7 @@ void Streets::loadTextures()
 	//building roofs
 	cout << "Loading building roof texture" << endl;
 	for (i = 0; i < 1; i++) {
-		sprintf(file, "assets/textures/building_roofs/%d/jpg", i+1);
+		sprintf(file, "assets/textures/building_roofs/%d.jpg", i+1);
 		tempTex = ImageLoader::readTexture(file);
 		gTextures.building_roof.push_back(tempTex);
 	}

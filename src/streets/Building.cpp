@@ -10,7 +10,7 @@
 Building::Building(float w, float l, float h, textures t) : Construction(w, l, h, t) {
 	// TODO Auto-generated constructor stub
 	storeyHeight = 2.5;
-	num_stories = w / storeyHeight;
+	num_stories = h / storeyHeight;
 	texBuilding = gTextures.building[Random::generateRandom(0, gTextures.building.size())];
 
 }
@@ -34,6 +34,11 @@ void Building::generateConstruction()
 				drawBuilding(false);
 			glPopMatrix();
 		}
+
+		glPushMatrix();
+			glTranslatef(0.0, storeyHeight * num_stories, 0.0);
+			drawRoofs();
+		glPopMatrix();
 //		glColor3f(r, g, b);
 //		glPushMatrix();
 //			glTranslatef(0.0f, height/2.f, 0.0f);
@@ -84,4 +89,8 @@ void Building::drawWallTex() {
 
 	glDisable(GL_TEXTURE_2D);
 	glBindTexture(GL_TEXTURE_2D, 0);
+}
+
+void Building::drawRoofs() {
+	float rsize = 0.5
 }
