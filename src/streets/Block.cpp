@@ -146,13 +146,13 @@ void Block::newResidentialBlock()
 //	z.push_back(startZ);
 	while (startX < width)
 	{
-		cout << " new" << endl;
+//		cout << " new" << endl;
 		rand = Random::generateRandom(2, 3);
 		if (endX+rand*10 > (width - 20))
 			endX = width;
 		else
 			endX += rand*10;
-		printf("sX %f, eX %f \n", startX, endX);
+//		printf("sX %f, eX %f \n", startX, endX);
 		while (startZ < length)
 		{
 
@@ -167,7 +167,7 @@ void Block::newResidentialBlock()
 			else
 				endZ += rand*10;
 
-			printf("sX %f, sZ %f, eX %f eZ %f, W %f, L %f \n", startX, startZ, endX, endZ, width, length);
+//			printf("sX %f, sZ %f, eX %f eZ %f, W %f, L %f \n", startX, startZ, endX, endZ, width, length);
 //			z.push_back(startZ);
 //			x.push_back(startX);
 			tempCoord.end.x = endX;
