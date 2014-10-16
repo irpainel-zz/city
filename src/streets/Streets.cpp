@@ -557,49 +557,54 @@ void Streets::loadTextures()
 	char file[250];
 
 	//grass
+	cout << "Loading grass texture" << endl;
 	for (i = 0; i < 3; ++i) {
 		sprintf(file, "assets/textures/grass/%d.jpg", i+1);
-		cout << "Loading texture: "<< file << endl;
 		tempTex = ImageLoader::readTexture(file);
 		gTextures.grass.push_back(tempTex);
 	}
 
 	//windows
+	cout << "Loading window texture" << endl;
 	for (i = 0; i < 16; ++i) {
 		sprintf(file, "assets/textures/window/%d.jpg", i+1);
-		cout << "Loading texture: "<< file << endl;
+		//cout << "Loading texture: "<< file << endl;
 		tempTex = ImageLoader::readTexture(file);
 		gTextures.window.push_back(tempTex);
 	}
 
 	//doors
+	cout << "Loading door texture" << endl;
 	for (i = 0; i < 7; ++i) {
 		sprintf(file, "assets/textures/door/%d.jpg", i+1);
-		cout << "Loading texture: "<< file << endl;
+		//cout << "Loading texture: "<< file << endl;
 		tempTex = ImageLoader::readTexture(file);
 		gTextures.door.push_back(tempTex);
 	}
 
 	//walls
+	cout << "Loading wall texture" << endl;
 	for (i = 0; i < 12; ++i) {
 		sprintf(file, "assets/textures/wall/%d.jpg", i+1);
-		cout << "Loading texture: "<< file << endl;
+		//cout << "Loading texture: "<< file << endl;
 		tempTex = ImageLoader::readTexture(file);
 		gTextures.wall.push_back(tempTex);
 	}
 
 	//roof
+	cout << "Loading roof texture" << endl;
 	for (i = 0; i < 8; ++i) {
 		sprintf(file, "assets/textures/roof/%d.jpg", i+1);
-		cout << "Loading texture: "<< file << endl;
+		//cout << "Loading texture: "<< file << endl;
 		tempTex = ImageLoader::readTexture(file);
 		gTextures.roof.push_back(tempTex);
 	}
 
 	//building
+	cout << "Loading building texture" << endl;
 	for (i = 0; i < 15; ++i) {
 		sprintf(file, "assets/textures/building/%d.jpg", i+1);
-		cout << "Loading texture: "<< file << endl;
+		//cout << "Loading texture: "<< file << endl;
 		tempTex = ImageLoader::readTexture(file);
 		gTextures.building.push_back(tempTex);
 	}
