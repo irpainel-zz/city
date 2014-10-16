@@ -54,6 +54,16 @@ void Building::drawWallTex() {
 	int angle = 1;
 	float wsize = 0.5;
 
+	glm::vec4 ambient = glm::vec4(0.8f, 0.8f, 0.8f, 1.0f);
+	glm::vec4 diffuse = glm::vec4(0.2f, 0.2f, 0.2f, 1.0f);
+	glm::vec4 specular = glm::vec4(0.f, 0.0f, 0.0f, 1.f);
+	float shininess = 80;
+
+	glMaterialfv(GL_FRONT, GL_AMBIENT, &ambient[0]);
+	glMaterialfv(GL_FRONT, GL_DIFFUSE, &diffuse[0]);
+	glMaterialfv(GL_FRONT, GL_SPECULAR, &specular[0]);
+	glMaterialf(GL_FRONT, GL_SHININESS, shininess);
+
 	glEnable(GL_TEXTURE_2D);
 	glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
 	glBindTexture(GL_TEXTURE_2D, texBuilding);
