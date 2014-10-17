@@ -9,10 +9,21 @@
 
 Building::Building(float w, float l, float h, textures t) : Construction(w, l, h, t) {
 	// TODO Auto-generated constructor stub
+
+
 	storeyHeight = 2.5;
 	num_stories = h / storeyHeight;
 	texBuilding = gTextures.building[Random::generateRandom(0, gTextures.building.size())];
 	texRoof = gTextures.building_roof[Random::generateRandom(0, gTextures.building_roof.size())];
+
+	while(true) {
+		if(w != l && texRoof == gTextures.building_roof[1]) {
+			texRoof = gTextures.building_roof[Random::generateRandom(0, gTextures.building_roof.size())];
+		} else {
+			break;
+		}
+	}
+
 }
 
 Building::~Building() {
