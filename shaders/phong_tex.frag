@@ -1,4 +1,3 @@
-
 varying vec3 vN;
 varying vec3 v; 
 #define MAX_LIGHTS 1
@@ -20,7 +19,6 @@ void main (void)
    
       //calculate Ambient Term: 
       vec4 Iamb = gl_FrontLightProduct[i].ambient; 
-
 
       if (gl_LightSource[i].spotCutoff <= 90.0)
       {

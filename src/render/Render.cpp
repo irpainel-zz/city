@@ -36,7 +36,7 @@ Render::Render() {
 void Render::load()
 {
 	skybox = new Skybox();
-	streets = new Streets(500, 500);
+	streets = new Streets(citySize.x, citySize.y);
 	streets->createMap();
 	glewInit();
 
@@ -225,21 +225,31 @@ void Render::rotTh(int v)
 
 void Render::setupLights() {
 
-	//ambient
-	float ambient[] = { 1.0f, 1.0f, 1.0f, 1.0f };
-	float diffuse[] = { 0.5f, 0.5f, 0.5f, 1.0f };
-	float specular[] ={ 1.0f, 1.0f, 1.0f, 1.0f };
-	float position[] = { 20.0f, 30.0f, 10.0f, 1.0f };
+//	//ambient
+//	float ambient[] = { 1.0f, 1.0f, 1.0f, 1.0f };
+//	float diffuse[] = { 0.5f, 0.5f, 0.5f, 1.0f };
+//	float specular[] ={ 1.0f, 1.0f, 1.0f, 1.0f };
+//	float position[] = { 20.0f, 30.0f, 10.0f, 1.0f };
+//
+//	glLightfv(GL_LIGHT0, GL_AMBIENT, ambient);
+//	glLightfv(GL_LIGHT0, GL_DIFFUSE, diffuse);
+//	glLightfv(GL_LIGHT0, GL_SPECULAR, specular);
+//	glLightfv(GL_LIGHT0, GL_POSITION, position);
 
-	glLightfv(GL_LIGHT0, GL_AMBIENT, ambient);
-	glLightfv(GL_LIGHT0, GL_DIFFUSE, diffuse);
-	glLightfv(GL_LIGHT0, GL_SPECULAR, specular);
-	glLightfv(GL_LIGHT0, GL_POSITION, position);
+	//directional light
+	float directionalAmbient[] = { 1.f, 1.f, 1.f, 0.0f };
+	float directionalDiffuse[] = { 0.1f, 0.1f, 0.1f, 1.0f };
+	float directionalSpecular[] = { 0.5f, 0.5f, 0.5f, 1.0f };
+	float directionalPosition[] = { 200.0f, 200.0f, 200.0f, 0.0f };
 
+	glLightfv(GL_LIGHT0, GL_AMBIENT, directionalAmbient);
+	glLightfv(GL_LIGHT0, GL_DIFFUSE, directionalDiffuse);
+	glLightfv(GL_LIGHT0, GL_SPECULAR, directionalSpecular);
+	glLightfv(GL_LIGHT0, GL_POSITION, directionalPosition);
 
 	glEnable(GL_LIGHTING);
 	glEnable(GL_LIGHT0);
-		glEnable(GL_DEPTH_TEST);
+//		glEnable(GL_DEPTH_TEST);
 //		glEnable(GL_COLOR_MATERIAL);
 
 }
@@ -247,7 +257,7 @@ void Render::setupLights() {
 void Render::setShaders()
 {
 
-	phong = createProgram("shaders/phong.frag", "shaders/phong.vert");
+//	phong = createProgram("shaders/phong.frag", "shaders/phong.vert");
 	tex = createProgram("shaders/phong_tex.frag", "shaders/phong_tex.vert");
 //	bump = createProgram("shaders/phong_bump.frag", "shaders/phong_bump.vert");
 	cubemap = createProgram("shaders/skybox.frag", "shaders/skybox.vert");
