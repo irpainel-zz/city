@@ -49,6 +49,19 @@ namespace glutFramework {
 	}
 	
 	void GlutFramework::startFramework(int argc, char *argv[]) {
+
+		if (argc < 2 || argc > 3) {
+			//Usage instructions for core and challenge
+			printf("Input value should be integers\n");
+			printf("./city WIDTH LENGTH\n");
+			printf("Using predetermined values to create the city (500,500)\n");
+			citySize = glm::vec2 (500, 500);
+		}
+		else
+		{
+			citySize = glm::vec2 (atoi(argv[1]), atoi(argv[2]));
+		}
+
 		setInstance();	// Sets the instance to self, used in the callback wrapper functions
 		
 		// Initialize GLUT

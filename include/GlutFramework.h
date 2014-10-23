@@ -98,7 +98,7 @@ namespace glutFramework {
 		std::string title;
 		double elapsedTimeInSeconds;  
 		static GlutFramework *instance;
-		
+		glm::vec2 citySize;
 		
 		glm::vec3 eyeVector;
 		glm::vec3 centerVector;
